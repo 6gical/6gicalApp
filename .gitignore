@@ -1,3 +1,4 @@
+### For play ###
 logs
 project/project
 project/target
@@ -13,3 +14,9 @@ dist
 /.project
 /RUNNING_PID
 /.settings
+
+### For emacs ###
+*~
+*#
+
+.DS_Store
