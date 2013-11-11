@@ -12,7 +12,7 @@ window.onload = function () {
     game.touched = false;
 
     game.preload('graphic.png');
-    game.preload('esot_bgm.wav');
+    game.preload('esot_bgm.mp3');
 
     game.onload = function () {
 
@@ -35,8 +35,8 @@ window.onload = function () {
     };
     game.start();
     game.onstart = function() {
-	game.assets['esot_bgm.wav'].play();
-	game.assets['esot_bgm.wav'].src.loop = true;
+	game.assets['esot_bgm.mp3'].play();
+	game.assets['esot_bgm.mp3'].src.loop = true;
     }
 };
 
