@@ -153,7 +153,8 @@ var EnemyShoot = enchant.Class.create(Shoot, {
         Shoot.call(this, x, y, Math.PI);
         this.addEventListener('enterframe', function () {
             if(player.within(this, 8)) {
-                game.end(game.score, "SCORE: " + game.score)
+                game.end(game.score, "SCORE: " + game.score);
+		game.assets['sounds/esot_bgm.mp3'].stop();
             }
         });
     }
