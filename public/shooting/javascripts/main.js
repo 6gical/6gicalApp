@@ -1,18 +1,21 @@
 
 enchant();
 
-window.onload = function () {
-    var screenWidth = 320;
-    var screenHeight = 320;
-    var fps = 24;
+var logiOsciGame = {
+    screenWidth: 320,
+    screenHeight: 320,
+    PLAYER_SHOOT_MAX: 3
+};
 
-    game = new Game(screenWidth, screenHeight);
+window.onload = function () {
+    var fps = 24;
+    game = new Game(logiOsciGame.screenWidth, logiOsciGame.screenHeight);
     game.fps = fps;
     game.score = 0;
     game.touched = false;
 
-    game.preload('graphic.png');
-    game.preload('esot_bgm.mp3');
+    game.preload('images/graphic.png');
+    game.preload('sounds/esot_bgm.mp3');
 
     game.onload = function () {
 
@@ -22,9 +25,9 @@ window.onload = function () {
         game.rootScene.backgroundColor = 'black';
         game.rootScene.addEventListener('enterframe', function () {
             if(rand(1000) < game.frame / 20 * Math.sin(game.frame / 100) + game.frame / 20 + 50) {
-                var y = rand(320);
-                var omega = y < 160 ? 0.01 : -0.01;
-                var enemy = new Enemy(320, y, omega);
+                var y = rand(logiOsciGame.screenHeight);
+                var omega = y < logiOsciGame.screenHeight / 2 ? 0.01 : -0.01;
+                var enemy = new Enemy(logiOsciGame.screenWidth, y, omega);
                 enemy.key = game.frame;
                 enemies[game.frame] = enemy;
             }
@@ -35,17 +38,19 @@ window.onload = function () {
     };
     game.start();
     game.onstart = function() {
-	game.assets['esot_bgm.mp3'].play();
-	game.assets['esot_bgm.mp3'].src.loop = true;
-    }
+	game.assets['sounds/esot_bgm.mp3'].play();
+	game.assets['sounds/esot_bgm.mp3'].src.loop = true;
+    };
 };
 
 var Player = enchant.Class.create(enchant.Sprite, {
     initialize: function (x, y) {
         enchant.Sprite.call(this, 16, 16);
-        this.image = game.assets['graphic.png'];
+        this.image = game.assets['images/graphic.png'];
         this.x = x;
         this.y = y;
+
+	this.shoots = [];
 
         this.frame = 0;
 
@@ -65,8 +70,10 @@ var Player = enchant.Class.create(enchant.Sprite, {
         });
 
         this.addEventListener('enterframe', function () {
-            if(game.touched && game.frame % 3 == 0) {
-                var s = new PlayerShoot(this.x, this.y);
+            if (game.touched && game.frame % 3 == 0 &&
+		this.shoots.length < logiOsciGame.PLAYER_SHOOT_MAX) {
+                var s = new PlayerShoot(this.x, this.y, this);
+		this.shoots.push(s);
             }
         });
 
@@ -77,7 +84,7 @@ var Player = enchant.Class.create(enchant.Sprite, {
 var Enemy = enchant.Class.create(enchant.Sprite, {
     initialize: function (x, y, omega) {
         enchant.Sprite.call(this, 16, 16);
-        this.image = game.assets['graphic.png'];
+        this.image = game.assets['images/graphic.png'];
         this.x = x;
         this.y = y;
 
@@ -89,7 +96,8 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
 
         this.addEventListener('enterframe', function () {
             this.move();
-            if(this.y > 320 || this.x > 320 || this.x < -this.width || this.y < -this.height) {
+            if(this.y > logiOsciGame.screenHeight || this.x > logiOsciGame.screenWidth ||
+	       this.x < -this.width || this.y < -this.height) {
                 this.remove();
             } else if(this.age % 10 == 0) {
                 var s = new EnemyShoot(this.x, this.y);
@@ -112,7 +120,7 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
 var Shoot = enchant.Class.create(enchant.Sprite, {
     initialize: function (x, y, direction) {
         enchant.Sprite.call(this, 16, 16);
-        this.image = game.assets['graphic.png'];
+        this.image = game.assets['images/graphic.png'];
         this.x = x;
         this.y = y;
         this.frame = 1;
@@ -121,7 +129,8 @@ var Shoot = enchant.Class.create(enchant.Sprite, {
         this.addEventListener('enterframe', function () {
             this.x += this.moveSpeed * Math.cos(this.direction);
             this.y += this.moveSpeed * Math.sin(this.direction);
-            if(this.y > 320 || this.x > 320 || this.x < -this.width || this.y < -this.height) {
+            if(this.y > logiOsciGame.screenHeight || this.x > logiOsciGame.screenWidth ||
+	       this.x < -this.width || this.y < -this.height) {
                 this.remove();
             }
         });
@@ -134,8 +143,9 @@ var Shoot = enchant.Class.create(enchant.Sprite, {
 });
 
 var PlayerShoot = enchant.Class.create(Shoot, {
-    initialize: function (x, y) {
+    initialize: function (x, y, owner) {
         Shoot.call(this, x, y, 0);
+	this.owner = owner;
         this.addEventListener('enterframe', function () {
             for (var i in enemies) {
                 if(enemies[i].intersect(this)) {
@@ -145,6 +155,15 @@ var PlayerShoot = enchant.Class.create(Shoot, {
                 }
             }
         });
+    },
+    remove: function() {
+	var self = this;
+	this.owner.shoots.some(function(v, i){
+	    if (v == self) {
+		self.owner.shoots.splice(i, 1);
+	    }
+	});
+	Shoot.prototype.remove.call(this);
     }
 });
 
