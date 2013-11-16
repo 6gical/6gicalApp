@@ -4,7 +4,9 @@ enchant();
 var logiOsciGame = {
     screenWidth: 320,
     screenHeight: 320,
-    PLAYER_SHOOT_MAX: 3
+    PLAYER_SHOOT_MAX: 3,
+    bgm: navigator.userAgent.indexOf('Gecko') != -1 && navigator.userAgent.indexOf('Mac') != -1 ?
+	'sounds/esot_bgm.wav' : 'sounds/esot_bgm.mp3'
 };
 
 window.onload = function () {
@@ -15,7 +17,7 @@ window.onload = function () {
     game.touched = false;
 
     game.preload('images/graphic.png');
-    game.preload('sounds/esot_bgm.mp3');
+    game.preload(logiOsciGame.bgm);
 
     game.onload = function () {
 
@@ -36,10 +38,13 @@ window.onload = function () {
         scoreLabel = new ScoreLabel(8, 8);
         game.rootScene.addChild(scoreLabel);
     };
+    game.onerror = function(e) {
+	alert('sorry. something wrong:' + e.message);
+    };
     game.start();
     game.onstart = function() {
-	game.assets['sounds/esot_bgm.mp3'].play();
-	game.assets['sounds/esot_bgm.mp3'].src.loop = true;
+	game.assets[logiOsciGame.bgm].play();
+	game.assets[logiOsciGame.bgm].src.loop = true;
     };
 };
 
@@ -173,7 +178,7 @@ var EnemyShoot = enchant.Class.create(Shoot, {
         this.addEventListener('enterframe', function () {
             if(player.within(this, 8)) {
                 game.end(game.score, "SCORE: " + game.score);
-		game.assets['sounds/esot_bgm.mp3'].stop();
+		game.assets[logiOsciGame.bgm].stop();
             }
         });
     }
