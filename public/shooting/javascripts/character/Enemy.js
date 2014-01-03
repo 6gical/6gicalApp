@@ -17,7 +17,12 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
                this.x < -this.width || this.y < -this.height) {
                 this.remove();
             } else if(this.age % 10 == 0) {
-                var s = new EnemyShoot(this.x, this.y);
+//                var s = new DirectedBullet(this.x, this.y, Math.PI, 10);
+                var s = new AimingBullet(this.x,
+                                         this.y,
+                                         logiOsciGame.player.x,
+                                         logiOsciGame.player.y,
+                                         10);
             }
         });
         logiOsciGame.game.rootScene.addChild(this);
@@ -31,18 +36,6 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
     remove: function () {
         logiOsciGame.game.rootScene.removeChild(this);
         delete logiOsciGame.enemies[this.key];
-    }
-});
-
-var EnemyShoot = enchant.Class.create(Shoot, {
-    initialize: function (x, y) {
-        Shoot.call(this, x, y, Math.PI);
-        this.addEventListener('enterframe', function () {
-            if (logiOsciGame.player.within(this, 8)) {
-                logiOsciGame.game.end(logiOsciGame.game.score, "SCORE: " + logiOsciGame.game.score);
-                logiOsciGame.game.assets['sounds/esot_bgm.mp3'].stop();
-            }
-        });
     }
 });
 
