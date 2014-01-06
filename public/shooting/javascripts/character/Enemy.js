@@ -30,8 +30,8 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
     move: function () {
         this.direction += this.omega;
 
-        this.x -= this.moveSpeed * Math.cos(this.direction / 180 * Math.PI);
-        this.y += this.moveSpeed * Math.sin(this.direction / 180 * Math.PI);
+        this.x -= ~~(this.moveSpeed * Math.cos(this.direction / 180 * Math.PI));
+        this.y += ~~(this.moveSpeed * Math.sin(this.direction / 180 * Math.PI));
     },
     remove: function () {
         logiOsciGame.game.rootScene.removeChild(this);
@@ -56,4 +56,9 @@ var ZigzagEnemy = enchant.Class.create(Enemy, {
         }
     }
 });
+
+var EnemyType = {
+    NORMAL: Enemy,
+    ZIGZAG: ZigzagEnemy
+};
 

@@ -46,8 +46,8 @@ var DirectedBullet = enchant.Class.create(Bullet, {
         this.speed = speed;
     },
     move: function() {
-        this.x += this.vx;
-        this.y += this.vy;
+        this.x += ~~this.vx;
+        this.y += ~~this.vy;
     }
 });
 
@@ -63,8 +63,8 @@ var AimingBullet = enchant.Class.create(Bullet, {
         this.speed = speed;
     },
     move: function() {
-        this.x += this.vx;
-        this.y += this.vy;
+        this.x += ~~this.vx;
+        this.y += ~~this.vy;
     }
 });
 

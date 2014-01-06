@@ -5,30 +5,30 @@ var Player = enchant.Class.create(enchant.Sprite, {
         this.x = x;
         this.y = y;
 
-	this.shoots = [];
+	    this.shoots = [];
 
         this.frame = 0;
 
         logiOsciGame.game.rootScene.addEventListener('touchstart', function (e) {
-            logiOsciGame.player.x = e.x;
-            logiOsciGame.player.y = e.y;
+            logiOsciGame.player.x = ~~e.x;
+            logiOsciGame.player.y = ~~e.y;
             logiOsciGame.game.touched = true;
         });
         logiOsciGame.game.rootScene.addEventListener('touchmove', function (e) {
-            logiOsciGame.player.x = e.x;
-            logiOsciGame.player.y = e.y;
+            logiOsciGame.player.x = ~~e.x;
+            logiOsciGame.player.y = ~~e.y;
         });
         logiOsciGame.game.rootScene.addEventListener('touchend', function (e) {
-            logiOsciGame.player.x = e.x;
-            logiOsciGame.player.y = e.y;
+            logiOsciGame.player.x = ~~e.x;
+            logiOsciGame.player.y = ~~e.y;
             logiOsciGame.game.touched = false;
         });
 
         this.addEventListener('enterframe', function () {
             if (logiOsciGame.game.touched && logiOsciGame.game.frame % 3 == 0 &&
-		this.shoots.length < logiOsciGame.PLAYER_SHOOT_MAX) {
+		        this.shoots.length < logiOsciGame.PLAYER_SHOOT_MAX) {
                 var s = new PlayerShoot(this.x, this.y, this);
-		this.shoots.push(s);
+		        this.shoots.push(s);
             }
         });
 
@@ -39,10 +39,10 @@ var Player = enchant.Class.create(enchant.Sprite, {
 var PlayerShoot = enchant.Class.create(Shoot, {
     initialize: function (x, y, owner) {
         Shoot.call(this, x, y, 0);
-	this.owner = owner;
+	    this.owner = owner;
         this.addEventListener('enterframe', function () {
             for (var i in logiOsciGame.enemies) {
-                if(logiOsciGame.enemies[i].intersect(this)) {
+                if (logiOsciGame.enemies[i].intersect(this)) {
                     this.remove();
                     logiOsciGame.enemies[i].remove();
                     logiOsciGame.game.score += 100;
