@@ -20,7 +20,7 @@ var Bullet = enchant.Class.create(enchant.Sprite, {
         if (logiOsciGame.player.within(this, 8)) {
             logiOsciGame.game.end(logiOsciGame.game.score,
                                   'SCORE: ' + logiOsciGame.game.score);
-            logiOsciGame.game.assets['sounds/esot_bgm.mp3'].stop();
+            logiOsciGame.game.assets[logiOsciGame.bgm].stop();
         }
     },
     removeIfOffScreen: function() {

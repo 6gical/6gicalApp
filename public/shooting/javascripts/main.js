@@ -5,7 +5,7 @@ var logiOsciGame = {
     screenHeight: 396,
     PLAYER_SHOOT_MAX: 3,
     bgm: navigator.userAgent.indexOf('Gecko') != -1 && navigator.userAgent.indexOf('Mac') != -1 ?
-         'sounds/esot_bgm.wav' : 'sounds/esot_bgm.mp3'
+        'sounds/esot_bgm.wav' : 'sounds/esot_bgm.mp3'
 };
 
 
