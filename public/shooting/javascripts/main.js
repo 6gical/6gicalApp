@@ -1,4 +1,3 @@
-
 enchant();
 
 var logiOsciGame = {
@@ -50,12 +49,11 @@ window.onload = function () {
         game.rootScene.addChild(scoreLabel);
     };
     game.onerror = function(e) {
-	alert('sorry. something wrong:' + e.message);
+        alert('sorry. something wrong:' + e.message);
     };
     game.start();
     game.onstart = function() {
-	game.assets[logiOsciGame.bgm].play();
-	game.assets[logiOsciGame.bgm].src.loop = true;
+        game.assets[logiOsciGame.bgm].play();
+        game.assets[logiOsciGame.bgm].src.loop = true;
     };
 };
-

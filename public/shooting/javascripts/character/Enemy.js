@@ -61,4 +61,3 @@ var EnemyType = {
     NORMAL: Enemy,
     ZIGZAG: ZigzagEnemy
 };
-

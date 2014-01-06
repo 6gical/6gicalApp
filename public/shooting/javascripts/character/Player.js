@@ -5,7 +5,7 @@ var Player = enchant.Class.create(enchant.Sprite, {
         this.x = x;
         this.y = y;
 
-	    this.shoots = [];
+        this.shoots = [];
 
         this.frame = 0;
 
@@ -39,7 +39,7 @@ var Player = enchant.Class.create(enchant.Sprite, {
 var PlayerShoot = enchant.Class.create(Shoot, {
     initialize: function (x, y, owner) {
         Shoot.call(this, x, y, 0);
-	    this.owner = owner;
+        this.owner = owner;
         this.addEventListener('enterframe', function () {
             for (var i in logiOsciGame.enemies) {
                 if (logiOsciGame.enemies[i].intersect(this)) {
@@ -51,12 +51,12 @@ var PlayerShoot = enchant.Class.create(Shoot, {
         });
     },
     remove: function() {
-	var self = this;
-	this.owner.shoots.some(function(v, i){
-	    if (v == self) {
-		self.owner.shoots.splice(i, 1);
-	    }
-	});
-	Shoot.prototype.remove.call(this);
+        var self = this;
+        this.owner.shoots.some(function(v, i){
+            if (v == self) {
+                self.owner.shoots.splice(i, 1);
+            }
+        });
+        Shoot.prototype.remove.call(this);
     }
 });

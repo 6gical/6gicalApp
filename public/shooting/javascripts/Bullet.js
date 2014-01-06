@@ -67,4 +67,3 @@ var AimingBullet = enchant.Class.create(Bullet, {
         this.y += ~~this.vy;
     }
 });
-
