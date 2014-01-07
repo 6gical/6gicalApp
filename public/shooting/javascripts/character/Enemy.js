@@ -1,18 +1,19 @@
 var Enemy = enchant.Class.create(enchant.Sprite, {
-    initialize: function (x, y, omega) {
+    initialize: function (x, y, omega, hasItem) {
         enchant.Sprite.call(this, 16, 16);
         this.image = logiOsciGame.game.assets['images/graphic.png'];
+        this.isAlive = true;
         this.x = x;
         this.y = y;
 
         this.frame = 3;
         this.omega = omega;
-
+        this.hasItem = hasItem;
         this.direction = 0;
         this.moveSpeed = 3;
         this.addEventListener('enterframe', function () {
             this.move();
-            if(this.y > logiOsciGame.screenHeight || this.x > logiOsciGame.screenWidth ||
+            if (this.y > logiOsciGame.screenHeight || this.x > logiOsciGame.screenWidth ||
                this.x < -this.width || this.y < -this.height) {
                 this.remove();
             } else if(this.age % 25 == 0) {
@@ -40,12 +41,22 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
     remove: function () {
         logiOsciGame.game.rootScene.removeChild(this);
         delete logiOsciGame.enemies[this.key];
+    },
+    killed: function() {
+        if (this.hasItem) {
+            var item = new Item(this.x, this.y, this.omega,this.moveSpeed);
+            item.key = item.frame;
+            logiOsciGame.items[logiOsciGame.game.frame] = item;
+            logiOsciGame.game.rootScene.addChild(item);
+        }
+        this.remove();
+        this.isAlive = false;
     }
 });
 
 var ZigzagEnemy = enchant.Class.create(Enemy, {
-    initialize: function (x, y, omega) {
-        Enemy.call(this, x, y, omega);
+    initialize: function (x, y, omega, hasItem) {
+        Enemy.call(this, x, y, omega, hasItem);
         this.frame = 4;
         this.time = 0;
         this.v_direction = 1;

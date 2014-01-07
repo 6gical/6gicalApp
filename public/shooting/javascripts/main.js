@@ -27,6 +27,7 @@ window.onload = function () {
 
         logiOsciGame.player = new Player(0, 152);
         var player = logiOsciGame.player;
+        logiOsciGame.items = new Array();
         logiOsciGame.enemies = new Array();
 
         var enemies = logiOsciGame.enemies;
@@ -36,7 +37,10 @@ window.onload = function () {
             for (var i = 0; i < e.length; i++) {
                 if (game.frame == e[i].frame) {
                     var omega = e[i].y < logiOsciGame.screenHeight / 2 ? 0.01 : -0.01;
-                    var enemy = new EnemyType[e[i].type](logiOsciGame.screenWidth, e[i].y, omega);
+                    var enemy = new EnemyType[e[i].type](logiOsciGame.screenWidth,
+                                                         e[i].y,
+                                                         omega,
+                                                         e[i].hasItem);
                     enemy.key = game.frame;
                     enemies[game.frame] = enemy;
                 }
