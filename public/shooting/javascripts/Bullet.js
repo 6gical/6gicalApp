@@ -13,8 +13,8 @@ var Bullet = enchant.Class.create(enchant.Sprite, {
         logiOsciGame.game.rootScene.addChild(this);
     },
     move: function() {
-        this.x += this.vx;
-        this.y += this.vy;
+        this.x = Math.round(this.x + this.vx);
+        this.y = Math.round(this.y + this.vy);
     },
     detectCollision: function() {
         if (logiOsciGame.player.within(this, 8)) {
@@ -46,8 +46,8 @@ var DirectedBullet = enchant.Class.create(Bullet, {
         this.speed = speed;
     },
     move: function() {
-        this.x += ~~this.vx;
-        this.y += ~~this.vy;
+        this.x = Math.round(this.x + this.vx);
+        this.y = Math.round(this.y + this.vy);
     }
 });
 
@@ -63,7 +63,23 @@ var AimingBullet = enchant.Class.create(Bullet, {
         this.speed = speed;
     },
     move: function() {
-        this.x += ~~this.vx;
-        this.y += ~~this.vy;
+        this.x = Math.round(this.x + this.vx);
+        this.y = Math.round(this.y + this.vy);
+    }
+});
+
+var NWayBullets = enchant.Class.create({
+    initialize: function(x, y, vx, vy, theta, n) {
+        this.bullets = [];
+        var radStep = Math.PI / 180 * theta;
+        var rad = n % 2 === 0 ? -n / 2 * radStep : (-n / 2 + 0.5) * radStep;
+        for (var i = 0; i < n; i++, rad += radStep) {
+            var c = Math.cos(rad);
+            var s = Math.sin(rad);
+            var bullet = new Bullet(x, y);
+            bullet.vx = vx * c - vy * s;
+            bullet.vy = vx * s + vy * c;
+            this.bullets.push(bullet);
+        }
     }
 });
