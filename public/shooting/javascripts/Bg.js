@@ -26,9 +26,10 @@ var SpaceBg = enchant.Class.create(enchant.Sprite, {
             this.bgSurface.context.fillStyle = this.COLORS[s.colorIndex];
             this.bgSurface.context.clearRect(s.x, s.y, s.size, s.size);
             s.x -= s.speed;
-            this.bgSurface.context.fillRect(s.x, s.y, s.size, s.size);
             if (s.x < 0) {
                 this.stars.splice(i, 1);
+            } else {
+                this.bgSurface.context.fillRect(s.x, s.y, s.size, s.size);
             }
         }
     }

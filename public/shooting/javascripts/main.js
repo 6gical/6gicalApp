@@ -3,7 +3,7 @@ enchant();
 var logiOsciGame = {
     screenWidth: 528,
     screenHeight: 396,
-    PLAYER_SHOOT_MAX: 3,
+    PLAYER_SHOT_MAX: 3,
     bgm: navigator.userAgent.indexOf('Gecko') != -1 && navigator.userAgent.indexOf('Mac') != -1 ?
         'sounds/esot_bgm.wav' : 'sounds/esot_bgm.mp3'
 };
@@ -15,7 +15,6 @@ window.onload = function () {
     var game = logiOsciGame.game;
     game.fps = fps;
     game.score = 0;
-    game.touched = false;
 
     game.preload('images/graphic.png');
     game.preload(logiOsciGame.bgm);
