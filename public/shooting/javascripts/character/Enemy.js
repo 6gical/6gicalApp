@@ -10,19 +10,23 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
 
         this.direction = 0;
         this.moveSpeed = 3;
-
         this.addEventListener('enterframe', function () {
             this.move();
             if(this.y > logiOsciGame.screenHeight || this.x > logiOsciGame.screenWidth ||
                this.x < -this.width || this.y < -this.height) {
                 this.remove();
-            } else if(this.age % 10 == 0) {
-//                var s = new DirectedBullet(this.x, this.y, Math.PI, 10);
-                var s = new AimingBullet(this.x,
+            } else if(this.age % 25 == 0) {
+                //                var s = new DirectedBullet(this.x, this.y, Math.PI, 10);
+/*                var s = new AimingBullet(this.x,
                                          this.y,
                                          logiOsciGame.player.x,
                                          logiOsciGame.player.y,
-                                         10);
+                                         10);*/
+                var s = new NWayBullets(this.x, this.y,
+                                        -5, 0,
+                                        30,
+                                        5);
+
             }
         });
         logiOsciGame.game.rootScene.addChild(this);
