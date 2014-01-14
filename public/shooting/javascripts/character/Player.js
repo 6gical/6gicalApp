@@ -26,9 +26,17 @@ var Player = enchant.Class.create(enchant.Sprite, {
 
         this.addEventListener('enterframe', function () {
             if (logiOsciGame.game.touched && logiOsciGame.game.frame % 3 == 0 &&
-		        this.shoots.length < logiOsciGame.PLAYER_SHOOT_MAX) {
+                this.shoots.length < logiOsciGame.PLAYER_SHOOT_MAX) {
                 var s = new PlayerShoot(this.x, this.y, this);
-		        this.shoots.push(s);
+                this.shoots.push(s);
+            }
+            for (var i in logiOsciGame.items) {
+                if (logiOsciGame.items[i].intersect(this) &&
+                    logiOsciGame.items[i].isAlive) {
+                    logiOsciGame.items[i].remove();
+                    logiOsciGame.items[i].obtained();
+                    logiOsciGame.game.score += 100;
+                }
             }
         });
 
@@ -42,9 +50,10 @@ var PlayerShoot = enchant.Class.create(Shoot, {
         this.owner = owner;
         this.addEventListener('enterframe', function () {
             for (var i in logiOsciGame.enemies) {
-                if (logiOsciGame.enemies[i].intersect(this)) {
+                if (logiOsciGame.enemies[i].intersect(this) &&
+                    logiOsciGame.enemies[i].isAlive) {
                     this.remove();
-                    logiOsciGame.enemies[i].remove();
+                    logiOsciGame.enemies[i].killed();
                     logiOsciGame.game.score += 100;
                 }
             }
