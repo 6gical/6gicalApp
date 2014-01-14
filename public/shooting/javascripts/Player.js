@@ -8,7 +8,7 @@ var Player = enchant.Class.create(enchant.Sprite, {
         this.shots = [];
 
         this.frame = 0;
-        this.weaponType = WeaponType.LASER;
+        this.weaponType = WeaponType.SIMPLE;
         this.touchStatus = Player.TouchStatus.NOT_TOUCHED;
         var self = this;
         logiOsciGame.game.rootScene.addEventListener('touchstart', function (e) {
@@ -33,6 +33,7 @@ var Player = enchant.Class.create(enchant.Sprite, {
                     logiOsciGame.items[i].isAlive) {
                     logiOsciGame.items[i].remove();
                     logiOsciGame.items[i].obtained();
+                    self.weaponType = WeaponType.LASER;
                     logiOsciGame.game.score += 100;
                 }
             }
