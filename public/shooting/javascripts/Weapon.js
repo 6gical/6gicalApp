@@ -80,6 +80,7 @@ var Laser = enchant.Class.create(enchant.Sprite, {
         case Laser.STATE.OPEN:
             if (this.owner.touchStatus == Player.TouchStatus.TOUCHING) {
                 this.x = this.owner.x;
+                this.y = this.owner.y;
             } else {
                 this.state = Laser.STATE.CLOSE;
             }
@@ -90,8 +91,6 @@ var Laser = enchant.Class.create(enchant.Sprite, {
             break;
         }
         this.width = this.laserWidth;
-
-        this.y = this.owner.y;
         for (var i in logiOsciGame.enemies) {
             if (logiOsciGame.enemies[i].intersect(this) &&
                 logiOsciGame.enemies[i].isAlive) {
