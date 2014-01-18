@@ -39,7 +39,7 @@ window.onload = function () {
                     var enemy = new EnemyType[e[i].type](logiOsciGame.screenWidth,
                                                          e[i].y,
                                                          omega,
-                                                         e[i].hasItem);
+                                                         Item.Type[e[i].item]);
                     enemy.key = game.frame;
                     enemies[game.frame] = enemy;
                 }
