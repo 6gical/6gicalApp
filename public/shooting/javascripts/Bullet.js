@@ -18,9 +18,8 @@ var Bullet = enchant.Class.create(enchant.Sprite, {
     },
     detectCollision: function() {
         if (logiOsciGame.player.within(this, 8)) {
-            logiOsciGame.game.end(logiOsciGame.game.score,
-                                  'SCORE: ' + logiOsciGame.game.score);
-            logiOsciGame.game.assets[logiOsciGame.bgm].stop();
+            logiOsciGame.player.damaged();
+            this.remove();
         }
     },
     removeIfOffScreen: function() {

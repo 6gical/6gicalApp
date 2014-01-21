@@ -47,7 +47,7 @@ var SimpleShot = enchant.Class.create(enchant.Sprite, {
 });
 
 var Laser = enchant.Class.create(enchant.Sprite, {
-    initialize: function (x, y, owner) {
+    initialize: function (owner) {
         enchant.Sprite.call(this, 1, 10);
         this.owner = owner;
         this.moveSpeed = 10;
@@ -59,8 +59,7 @@ var Laser = enchant.Class.create(enchant.Sprite, {
                                       logiOsciGame.screenWidth,
                                       1);
         this.image = this.surface;
-        this.x = x;
-        this.y = y;
+        this.moveTo(owner.x, owner.y);
         this.frame = 1;
         this.moveSpeed = 20;
         this.laserWidth = 0;
