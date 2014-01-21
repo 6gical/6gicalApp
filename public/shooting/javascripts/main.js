@@ -50,6 +50,10 @@ window.onload = function () {
         });
         var scoreLabel = new ScoreLabel(8, 8);
         game.rootScene.addChild(scoreLabel);
+
+        var lifePointGauge = new LifePointGauge(300, 20, player);
+        game.rootScene.addChild(lifePointGauge);
+        lifePointGauge.moveTo(300, 8);
     };
     game.onerror = function(e) {
         alert('sorry. something wrong:' + e.message);

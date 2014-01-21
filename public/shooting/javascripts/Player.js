@@ -6,6 +6,8 @@ var Player = enchant.Class.create(enchant.Sprite, {
         this.y = y;
 
         this.shots = [];
+        this.lifePoint = 10;
+        this.speedLevel = 1;
 
         this.frame = 0;
         this.weaponType = WeaponType.SIMPLE;
@@ -32,8 +34,8 @@ var Player = enchant.Class.create(enchant.Sprite, {
                 if (logiOsciGame.items[i].intersect(this) &&
                     logiOsciGame.items[i].isAlive) {
                     logiOsciGame.items[i].remove();
+                    self.itemObtained(logiOsciGame.items[i]);
                     logiOsciGame.items[i].obtained();
-                    self.weaponType = WeaponType.LASER;
                     logiOsciGame.game.score += 100;
                 }
             }
@@ -58,10 +60,37 @@ var Player = enchant.Class.create(enchant.Sprite, {
             break;
         case WeaponType.LASER:
             if (this.touchStatus == Player.TouchStatus.TOUCH_START) {
-                this._addShot(new Laser(logiOsciGame.player.x,
-                                        logiOsciGame.player.y,
-                                        logiOsciGame.player));
+                var laser = new Laser(logiOsciGame.player);
+                this._addShot(laser);
             }
+            break;
+        }
+    },
+    damaged: function() {
+        this.lifePoint--;
+        this.dispatchEvent(new Event(Player.EVENT.DAMAGED));
+        if (this.lifePoint <= 0) {
+            logiOsciGame.game.end(logiOsciGame.game.score,
+                                  'SCORE: ' + logiOsciGame.game.score);
+            logiOsciGame.game.assets[logiOsciGame.bgm].stop();
+        }
+
+    },
+    itemObtained: function(item) {
+        switch (item.type) {
+            case Item.Type.P:
+            if (this.lifePoint < Player.LIFE_MAX) this.lifePoint++;
+            break;
+            case Item.Type.S:
+            this.speedLevel++;
+            break;
+            case Item.Type.R:
+            // todo
+            break;
+            case Item.Type.L:
+            this.weaponType = WeaponType.LASER;
+            break;
+            default:
             break;
         }
     },
@@ -74,4 +103,7 @@ Player.TouchStatus = {
     TOUCHING: 1,
     TOUCH_END: 2,
     NOT_TOUCHED: 3
+};
+Player.EVENT = {
+    DAMAGED: 'damaged'
 };
