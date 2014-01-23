@@ -5,6 +5,8 @@ var Player = enchant.Class.create(enchant.Sprite, {
         this.x = x;
         this.y = y;
 
+        this.moveSpeed = Player.DEFAULT_MOVE_SPEED;
+
         this.shots = [];
         this.lifePoint = 10;
         this.speedLevel = 1;
@@ -12,23 +14,27 @@ var Player = enchant.Class.create(enchant.Sprite, {
         this.frame = 0;
         this.weaponType = WeaponType.SIMPLE;
         this.touchStatus = Player.TouchStatus.NOT_TOUCHED;
+
+        this.dstX = x;
+        this.dstY = y;
         var self = this;
         logiOsciGame.game.rootScene.addEventListener('touchstart', function (e) {
-            logiOsciGame.player.x = ~~e.x;
-            logiOsciGame.player.y = ~~e.y;
+            self.dstX = Math.round(e.x);
+            self.dstY = Math.round(e.y);
             self.touchStatus = Player.TouchStatus.TOUCH_START;
         });
         logiOsciGame.game.rootScene.addEventListener('touchmove', function (e) {
-            logiOsciGame.player.x = ~~e.x;
-            logiOsciGame.player.y = ~~e.y;
+            self.dstX = Math.round(e.x);
+            self.dstY = Math.round(e.y);
         });
         logiOsciGame.game.rootScene.addEventListener('touchend', function (e) {
-            logiOsciGame.player.x = ~~e.x;
-            logiOsciGame.player.y = ~~e.y;
+            self.dstX = Math.round(e.x);
+            self.dstY = Math.round(e.y);
             self.touchStatus = Player.TouchStatus.TOUCH_END;
         });
 
         this.addEventListener('enterframe', function () {
+            self._moveToDst();
             self.attack();
             for (var i in logiOsciGame.items) {
                 if (logiOsciGame.items[i].intersect(this) &&
@@ -47,6 +53,17 @@ var Player = enchant.Class.create(enchant.Sprite, {
         });
 
         logiOsciGame.game.rootScene.addChild(this);
+    },
+    _moveToDst: function() {
+        var s = this.moveSpeed;
+        var dx = this.dstX - this.x;
+        var dy = this.dstY - this.y;
+        var d = Math.sqrt(dx * dx + dy * dy);
+        s = Math.min(d, s);
+        if (d == 0)
+            return;
+        this.x += Math.round(dx / d * s);
+        this.y += Math.round(dy / d * s);
     },
     attack: function() {
         switch (this.weaponType) {
@@ -98,6 +115,7 @@ var Player = enchant.Class.create(enchant.Sprite, {
         this.shots.push(shot);
     }
 });
+Player.DEFAULT_MOVE_SPEED = 7;
 Player.TouchStatus = {
     TOUCH_START: 0,
     TOUCHING: 1,
