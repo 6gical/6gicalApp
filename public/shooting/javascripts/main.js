@@ -1,13 +1,19 @@
 enchant();
 
+var BgmType = {
+    MIDI: 0,
+    MP3: 1,
+    WAV: 2
+};
+
 var logiOsciGame = {
+    bgmType: BgmType.MIDI,
     screenWidth: 528,
     screenHeight: 396,
     PLAYER_SHOT_MAX: 3,
     bgm: navigator.userAgent.indexOf('Gecko') != -1 && navigator.userAgent.indexOf('Mac') != -1 ?
         'sounds/esot_bgm.wav' : 'sounds/esot_bgm.mp3'
 };
-
 
 window.onload = function () {
     var fps = 24;
@@ -17,8 +23,6 @@ window.onload = function () {
     game.score = 0;
 
     game.preload('images/graphic.png');
-    game.preload(logiOsciGame.bgm);
-
     game.onload = function () {
         var stage = FirstStage;
         var spaceBg = new SpaceBg(logiOsciGame.screenWidth, logiOsciGame.screenHeight);
@@ -58,9 +62,39 @@ window.onload = function () {
     game.onerror = function(e) {
         alert('sorry. something wrong:' + e.message);
     };
-    game.start();
+
     game.onstart = function() {
-        game.assets[logiOsciGame.bgm].play();
-        game.assets[logiOsciGame.bgm].src.loop = true;
+        if (logiOsciGame.bgmType == BgmType.MIDI) {
+            MIDI.Player.loadFile("./sounds/ESOT_MIDI.mid", function() {
+                MIDI.Player.start();
+            });
+        } else {
+            game.assets[logiOsciGame.bgm].play();
+            game.assets[logiOsciGame.bgm].src.loop = true;
+        }
     };
+
+    /** load bgm **/
+    if (logiOsciGame.bgmType != BgmType.MIDI) {
+        game.preload(logiOsciGame.bgm);
+        game.start();
+        return;
+    }
+    MIDI.loadPlugin({
+        targetFormat: 'mp3',
+        soundfontUrl: 'sounds/',
+        instruments: ['lead_1_square'],  // 80
+/*      instruments: ['lead_1_square',   // 80
+                      'lead_2_sawtooth', // 81
+                      'lead_3_calliope', // 82
+                      'lead_4_chiff',    // 83
+                      'lead_5_charang'], // 84
+*/
+        callback: function() {
+            MIDI.channels[0].instrument = 80;
+            MIDI.channels[1].instrument = 80;
+            MIDI.channels[2].instrument = 80;
+            game.start();
+        }
+    });
 };
