@@ -60,7 +60,7 @@ var Player = enchant.Class.create(enchant.Sprite, {
         }
     },
     _moveToDst: function() {
-        var s = this.moveSpeed;
+        var s = this.moveSpeed * this.speedLevel;
         var dx = this.dstX - this.x;
         var dy = this.dstY - this.y;
         var d = Math.sqrt(dx * dx + dy * dy);
@@ -120,7 +120,7 @@ var Player = enchant.Class.create(enchant.Sprite, {
         this.shots.push(shot);
     }
 });
-Player.DEFAULT_MOVE_SPEED = 7;
+Player.DEFAULT_MOVE_SPEED = 4;
 Player.Y_OFFSET = -50;
 Player.TouchStatus = {
     TOUCH_START: 0,
