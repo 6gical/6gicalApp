@@ -48,13 +48,21 @@ window.onload = function () {
         });
         var scoreLabel = new ScoreLabel(8, 8);
         game.rootScene.addChild(scoreLabel);
+        var timeLabel = new TimeLabel(logiOsciGame.screenWidth - 180, 8);
+        game.rootScene.addChild(timeLabel);
 
-        var lifePointGauge = new LifePointGauge(300, 20, player);
-        game.rootScene.addChild(lifePointGauge);
-        lifePointGauge.moveTo(300, 8);
+        var lifeLabel = new LifeLabel(280,
+                                      logiOsciGame.screenHeight - 20,
+                                      Player.LIFE_MAX);
+        game.rootScene.addChild(lifeLabel);
+        lifeLabel.life = player.lifePoint;
+        player.addEventListener(Player.EVENT.DAMAGED,
+                                function() {
+                                    lifeLabel.life = player.lifePoint;
+                                });
     };
     game.onerror = function(e) {
-        alert('sorry. something wrong:' + e.message);
+        console.log('sorry. something wrong:' + e.message);
     };
     game.start();
     game.onstart = function() {
