@@ -4,8 +4,7 @@ var logiOsciGame = {
     screenWidth: 528,
     screenHeight: 396,
     PLAYER_SHOT_MAX: 3,
-    bgm: navigator.userAgent.indexOf('Gecko') != -1 && navigator.userAgent.indexOf('Mac') != -1 ?
-        'sounds/esot_bgm.wav' : 'sounds/esot_bgm.mp3'
+    bgm: 'sounds/esot_bgm.mp3'
 };
 
 
@@ -17,8 +16,6 @@ window.onload = function () {
     game.score = 0;
 
     game.preload('images/graphic.png');
-    game.preload(logiOsciGame.bgm);
-
     game.onload = function () {
         var stage = FirstStage;
         var spaceBg = new SpaceBg(logiOsciGame.screenWidth, logiOsciGame.screenHeight);
@@ -60,7 +57,9 @@ window.onload = function () {
     };
     game.start();
     game.onstart = function() {
-        game.assets[logiOsciGame.bgm].play();
-        game.assets[logiOsciGame.bgm].src.loop = true;
+        var sound = new enchant.DOMSound.load(logiOsciGame.bgm, 'audio/mpeg', function() {
+            sound.play();
+            sound._element.loop = true;
+        });
     };
 };
