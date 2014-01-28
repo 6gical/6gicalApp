@@ -19,17 +19,14 @@ var Player = enchant.Class.create(enchant.Sprite, {
         this.dstY = y;
         var self = this;
         logiOsciGame.game.rootScene.addEventListener('touchstart', function (e) {
-            self.dstX = Math.round(e.x);
-            self.dstY = Math.round(e.y);
+            self.setPos(e);
             self.touchStatus = Player.TouchStatus.TOUCH_START;
         });
         logiOsciGame.game.rootScene.addEventListener('touchmove', function (e) {
-            self.dstX = Math.round(e.x);
-            self.dstY = Math.round(e.y);
+            self.setPos(e);
         });
         logiOsciGame.game.rootScene.addEventListener('touchend', function (e) {
-            self.dstX = Math.round(e.x);
-            self.dstY = Math.round(e.y);
+            self.setPos(e);
             self.touchStatus = Player.TouchStatus.TOUCH_END;
         });
 
@@ -53,6 +50,14 @@ var Player = enchant.Class.create(enchant.Sprite, {
         });
 
         logiOsciGame.game.rootScene.addChild(this);
+    },
+    setPos: function(touchEvent) {
+        this.dstX = Math.round(touchEvent.x);
+        if (enchant.ENV.TOUCH_ENABLED) {
+            this.dstY = Math.round(touchEvent.y) + Player.Y_OFFSET;
+        } else {
+            this.dstY = Math.round(touchEvent.y);
+        }
     },
     _moveToDst: function() {
         var s = this.moveSpeed;
@@ -116,6 +121,7 @@ var Player = enchant.Class.create(enchant.Sprite, {
     }
 });
 Player.DEFAULT_MOVE_SPEED = 7;
+Player.Y_OFFSET = -50;
 Player.TouchStatus = {
     TOUCH_START: 0,
     TOUCHING: 1,
