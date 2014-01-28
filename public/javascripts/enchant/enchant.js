@@ -375,7 +375,7 @@ enchant.ENV = {
         var ua = navigator.userAgent;
         var vendor = navigator.vendor || "";
         // non-local access, not on mobile mobile device, not on safari
-        return (location.href.indexOf('http') === 0 && ua.indexOf('Mobile') === -1 && vendor.indexOf('Apple') !== -1);
+        return (location.href.indexOf('http') === 0 && ua.indexOf('Mobile') === -1 && vendor.indexOf('Apple') === -1);
     }()),
     /**
      * If click/touch event occure for these tags the setPreventDefault() method will not be called.

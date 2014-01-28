@@ -6,6 +6,7 @@ var logiOsciGame = {
     PLAYER_SHOT_MAX: 3,
     bgm: 'sounds/esot_bgm.mp3'
 };
+enchant.ENV.USE_FLASH_SOUND = false;
 
 
 window.onload = function () {
