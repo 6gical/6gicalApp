@@ -33,12 +33,14 @@ var Player = enchant.Class.create(enchant.Sprite, {
         this.addEventListener('enterframe', function () {
             self._moveToDst();
             self.attack();
-            for (var i in logiOsciGame.items) {
-                if (logiOsciGame.items[i].intersect(this) &&
-                    logiOsciGame.items[i].isAlive) {
-                    logiOsciGame.items[i].remove();
-                    self.itemObtained(logiOsciGame.items[i]);
-                    logiOsciGame.items[i].obtained();
+            var l = logiOsciGame.items.length;
+            for (var i = 0; i < l; i++) {
+                var index = l - 1 - i;
+                if (logiOsciGame.items[index].intersect(this) &&
+                    logiOsciGame.items[index].isAlive) {
+                    logiOsciGame.items[index].remove();
+                    self.itemObtained(logiOsciGame.items[index]);
+                    logiOsciGame.items[index].obtained();
                     logiOsciGame.game.score += 100;
                 }
             }

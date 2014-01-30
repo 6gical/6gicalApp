@@ -17,20 +17,18 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
                this.x < -this.width || this.y < -this.height) {
                 this.remove();
             } else if(this.age % 25 == 0) {
-                //                var s = new DirectedBullet(this.x, this.y, Math.PI, 10);
-/*                var s = new AimingBullet(this.x,
-                                         this.y,
-                                         logiOsciGame.player.x,
-                                         logiOsciGame.player.y,
-                                         10);*/
-                var s = new NWayBullets(this.x, this.y,
-                                        -5, 0,
-                                        30,
-                                        5);
-
+                this.shot();
             }
         });
         logiOsciGame.game.rootScene.addChild(this);
+    },
+    shot: function() {
+        //                var s = new DirectedBullet(this.x, this.y, Math.PI, Enemy.BULLET_SPEED);
+        var s = new AimingBullet(this.x,
+                                 this.y,
+                                 logiOsciGame.player.x,
+                                 logiOsciGame.player.y,
+                                 Enemy.BULLET_SPEED);
     },
     move: function () {
         this.direction += this.omega;
@@ -44,9 +42,9 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
     },
     killed: function() {
         if (this.itemType != null) {
-            var item = new Item(this.x, this.y, 0, this.itemType);
+            var item = new Item(this.x, this.y, this.moveSpeed / 2, this.itemType);
             item.key = item.frame;
-            logiOsciGame.items[logiOsciGame.game.frame] = item;
+            logiOsciGame.items.push(item);
             logiOsciGame.game.rootScene.addChild(item);
         }
         this.remove();
@@ -72,7 +70,19 @@ var ZigzagEnemy = enchant.Class.create(Enemy, {
     }
 });
 
+
+var NWayEnemy = enchant.Class.create(Enemy, {
+    shot: function() {
+        var s = new AimingBullet(this.x,
+                                 this.y,
+                                 logiOsciGame.player.x,
+                                 logiOsciGame.player.y,
+                                 Enemy.BULLET_SPEED);
+    }
+});
+Enemy.BULLET_SPEED = 7;
 var EnemyType = {
     NORMAL: Enemy,
-    ZIGZAG: ZigzagEnemy
+    ZIGZAG: ZigzagEnemy,
+    NWAY: NWayEnemy
 };

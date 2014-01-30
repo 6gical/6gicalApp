@@ -32,14 +32,14 @@ window.onload = function () {
         game.rootScene.addEventListener('enterframe', function () {
             var e = stage.enemies;
             for (var i = 0; i < e.length; i++) {
-                if (game.frame == e[i].frame) {
+                if (game.frame / game.fps == e[i].time) {
                     var omega = e[i].y < logiOsciGame.screenHeight / 2 ? 0.01 : -0.01;
-                    var enemy = new EnemyType[e[i].type](logiOsciGame.screenWidth,
+                    var enemy = new EnemyType[e[i].type](e[i].x != null ? e[i].x : logiOsciGame.screenWidth,
                                                          e[i].y,
                                                          omega,
                                                          Item.Type[e[i].item]);
                     enemy.key = game.frame;
-                    enemies[game.frame] = enemy;
+                    enemies.push(enemy);
                 }
             }
 

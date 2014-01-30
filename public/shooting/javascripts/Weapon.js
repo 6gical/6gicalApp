@@ -15,11 +15,13 @@ var SimpleShot = enchant.Class.create(enchant.Sprite, {
         logiOsciGame.game.rootScene.addChild(this);
         this.owner = owner;
         this.addEventListener('enterframe', function () {
-            for (var i in logiOsciGame.enemies) {
-                if (logiOsciGame.enemies[i].intersect(this) &&
-                    logiOsciGame.enemies[i].isAlive) {
+            var l = logiOsciGame.enemies.length;
+            for (var i = 0; i < l; i++) {
+                var index = l - 1 - i;
+                if (logiOsciGame.enemies[index].intersect(this) &&
+                    logiOsciGame.enemies[index].isAlive) {
                     this.remove();
-                    logiOsciGame.enemies[i].killed();
+                    logiOsciGame.enemies[index].killed();
                     logiOsciGame.game.score += 100;
                 }
             }
