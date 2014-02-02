@@ -36,13 +36,7 @@ var SimpleShot = enchant.Class.create(enchant.Sprite, {
         }
     },
     remove: function() {
-        var self = this;
-        this.owner.shots.some(function(v, i){
-            if (v == self) {
-                self.owner.shots.splice(i, 1);
-            }
-        });
-        console.log(self.owner.shots);
+        this.owner.removeShot(this);
         logiOsciGame.game.rootScene.removeChild(this);
         delete this;
     }
@@ -65,7 +59,6 @@ var Laser = enchant.Class.create(enchant.Sprite, {
         this.frame = 1;
         this.moveSpeed = 20;
         this.laserWidth = 0;
-        console.log(this);
         this.state = Laser.STATE.INIT;
         this.addEventListener('enterframe', this.move);
         logiOsciGame.game.rootScene.addChild(this);
@@ -79,7 +72,8 @@ var Laser = enchant.Class.create(enchant.Sprite, {
             }
             break;
         case Laser.STATE.OPEN:
-            if (this.owner.touchStatus == Player.TouchStatus.TOUCHING) {
+            if (this.owner.touchStatus == Player.TouchStatus.TOUCHING &&
+               this.age <= Laser.LASER_MAX_WIDTH) {
                 this.x = this.owner.x;
                 this.y = this.owner.y;
             } else {
@@ -107,6 +101,7 @@ var Laser = enchant.Class.create(enchant.Sprite, {
     },
     remove: function() {
         var self = this;
+        this.owner.removeShot(this);
         this.owner.shots.some(function(v, i){
             if (v == self) {
                 self.owner.shots.splice(i, 1);
@@ -122,3 +117,5 @@ Laser.STATE = {
     OPEN: 1,
     CLOSE: 2
 };
+Laser.LASER_MAX_WIDTH = 15;
+Laser.LASER_INTERVAL = 10;

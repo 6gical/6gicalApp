@@ -8,6 +8,7 @@ var Player = enchant.Class.create(enchant.Sprite, {
         this.moveSpeed = Player.DEFAULT_MOVE_SPEED;
 
         this.shots = [];
+        this.currentLaser = null;
         this.lifePoint = 10;
         this.speedLevel = 1;
 
@@ -79,16 +80,19 @@ var Player = enchant.Class.create(enchant.Sprite, {
         switch (this.weaponType) {
         case WeaponType.SIMPLE:
             if (this.touchStatus == Player.TouchStatus.TOUCHING) {
-                if (logiOsciGame.game.frame % 3 == 0 &&
-                    this.shots.length < logiOsciGame.PLAYER_SHOT_MAX) {
-                    this._addShot(new SimpleShot(this.x, this.y, this));
+                if (logiOsciGame.game.frame % Player.SHOT_INTERVAL == 0 &&
+                    this.shots.length < Player.SHOT_MAX) {
+                    this.addShot(new SimpleShot(this.x, this.y, this));
                 }
             }
             break;
         case WeaponType.LASER:
-            if (this.touchStatus == Player.TouchStatus.TOUCH_START) {
-                var laser = new Laser(logiOsciGame.player);
-                this._addShot(laser);
+            var laser = this.currentLaser;
+            if (this.touchStatus == Player.TouchStatus. TOUCHING &&
+                (laser == null ||
+                 laser.age > Laser.LASER_INTERVAL + Laser.LASER_MAX_WIDTH)) {
+                this.currentLaser = new Laser(logiOsciGame.player);
+                this.addShot(this.currentLaser);
             }
             break;
         }
@@ -109,7 +113,7 @@ var Player = enchant.Class.create(enchant.Sprite, {
             if (this.lifePoint < Player.LIFE_MAX) this.lifePoint++;
             break;
             case Item.Type.S:
-            this.speedLevel++;
+            this.speedLevel++;;
             break;
             case Item.Type.R:
             // todo
@@ -121,11 +125,23 @@ var Player = enchant.Class.create(enchant.Sprite, {
             break;
         }
     },
-    _addShot: function(shot) {
+    addShot: function(shot) {
         this.shots.push(shot);
+    },
+    removeShot: function(shot) {
+        if (shot == this.currentLaser) {
+            this.currentLaser = null;
+        }
+        this.shots.some(function(v, i, shots){
+            if (v == shot) {
+                shots.splice(i, 1);
+            }
+        });
     }
 });
+Player.SHOT_MAX = 5;
 Player.DEFAULT_MOVE_SPEED = 4;
+Player.SHOT_INTERVAL = 10;
 Player.Y_OFFSET = -50;
 Player.TouchStatus = {
     TOUCH_START: 0,

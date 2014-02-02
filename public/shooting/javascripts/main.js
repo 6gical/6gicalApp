@@ -4,7 +4,6 @@ var queryObj = StringUtil.queryObj();
 var logiOsciGame = {
     screenWidth: queryObj['width'] != null ? queryObj['width'] : 528,
     screenHeight: queryObj['height'] != null ? queryObj['height'] : 396,
-    PLAYER_SHOT_MAX: 3,
     bgm: 'sounds/esot_bgm.mp3',
     debug: queryObj['debug'] == 'true'
 };
