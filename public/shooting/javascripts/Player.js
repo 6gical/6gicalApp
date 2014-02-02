@@ -62,6 +62,9 @@ var Player = enchant.Class.create(enchant.Sprite, {
         }
     },
     _moveToDst: function() {
+        if (this.touchStatus !== Player.TouchStatus.TOUCHING) {
+            return;
+        }
         var s = this.moveSpeed * this.speedLevel;
         var dx = this.dstX - this.x;
         var dy = this.dstY - this.y;
