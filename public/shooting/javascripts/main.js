@@ -1,10 +1,12 @@
 enchant();
 
+var queryObj = StringUtil.queryObj();
 var logiOsciGame = {
-    screenWidth: 528,
-    screenHeight: 396,
+    screenWidth: queryObj['width'] != null ? queryObj['width'] : 528,
+    screenHeight: queryObj['height'] != null ? queryObj['height'] : 396,
     PLAYER_SHOT_MAX: 3,
-    bgm: 'sounds/esot_bgm.mp3'
+    bgm: 'sounds/esot_bgm.mp3',
+    debug: queryObj['debug'] == 'true'
 };
 enchant.ENV.USE_FLASH_SOUND = false;
 
@@ -64,7 +66,11 @@ window.onload = function () {
     game.onerror = function(e) {
         console.log('sorry. something wrong:' + e.message);
     };
-    game.start();
+    if (logiOsciGame.debug) {
+        game.debug();
+    } else {
+        game.start();
+    }
     game.onstart = function() {
         var sound = new enchant.DOMSound.load(logiOsciGame.bgm, 'audio/mpeg', function() {
             sound.play();
