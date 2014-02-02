@@ -99,7 +99,7 @@ var Player = enchant.Class.create(enchant.Sprite, {
         if (this.lifePoint <= 0) {
             logiOsciGame.game.end(logiOsciGame.game.score,
                                   'SCORE: ' + logiOsciGame.game.score);
-            logiOsciGame.game.assets[logiOsciGame.bgm].stop();
+            //logiOsciGame.game.assets[logiOsciGame.bgm].stop();
         }
 
     },
