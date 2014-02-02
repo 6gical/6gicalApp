@@ -113,7 +113,7 @@ var Player = enchant.Class.create(enchant.Sprite, {
             if (this.lifePoint < Player.LIFE_MAX) this.lifePoint++;
             break;
             case Item.Type.S:
-            this.speedLevel++;;
+            this.speedLevel += 0.5;
             break;
             case Item.Type.R:
             // todo
