@@ -33,8 +33,9 @@ var Player = enchant.Class.create(enchant.Sprite, {
         this.addEventListener('enterframe', function () {
             self._moveToDst();
             self.attack();
+            var i;
             var l = logiOsciGame.items.length;
-            for (var i = 0; i < l; i++) {
+            for (i = 0; i < l; i++) {
                 var index = l - 1 - i;
                 if (logiOsciGame.items[index].intersect(this) &&
                     logiOsciGame.items[index].isAlive) {
@@ -44,6 +45,13 @@ var Player = enchant.Class.create(enchant.Sprite, {
                     logiOsciGame.game.score += 100;
                 }
             }
+            l = logiOsciGame.enemies.length;
+            for (i = 0; i < l; i++) {
+                if (logiOsciGame.enemies[i].intersect(self)) {
+                    self.damaged();
+                }
+            }
+
             if (self.touchStatus == Player.TouchStatus.TOUCH_START) {
                 self.touchStatus = Player.TouchStatus.TOUCHING;
             } else if (self.touchStatus == Player.TouchStatus.TOUCH_END) {

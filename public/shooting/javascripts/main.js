@@ -30,17 +30,20 @@ window.onload = function () {
         var enemies = logiOsciGame.enemies;
         game.rootScene.backgroundColor = 'black';
         game.rootScene.addEventListener('enterframe', function () {
+            var time = game.frame / game.fps;
             var e = stage.enemies;
             for (var i = 0; i < e.length; i++) {
-                if (game.frame / game.fps == e[i].time) {
+                if (time == e[i].time) {
                     var omega = e[i].y < logiOsciGame.screenHeight / 2 ? 0.01 : -0.01;
                     var enemy = new EnemyType[e[i].type](e[i].x != null ? e[i].x : logiOsciGame.screenWidth,
                                                          e[i].y,
                                                          omega,
                                                          Item.Type[e[i].item]);
-                    enemy.key = game.frame;
-                    enemies.push(enemy);
                 }
+            }
+
+            if (stage.boss.time == time) {
+                var boss = new Boss();
             }
 
             scoreLabel.score = game.score;
@@ -64,11 +67,17 @@ window.onload = function () {
     game.onerror = function(e) {
         console.log('sorry. something wrong:' + e.message);
     };
-    game.start();
+    game.debug();
     game.onstart = function() {
         var sound = new enchant.DOMSound.load(logiOsciGame.bgm, 'audio/mpeg', function() {
             sound.play();
             sound._element.loop = true;
         });
+    };
+    game.onclear = function() {
+        game.stop();
+        setTimeout(function() {
+            alert('Congratulations! Thank you for playing.');
+        }, 10);
     };
 };

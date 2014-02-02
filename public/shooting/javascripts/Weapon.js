@@ -16,13 +16,14 @@ var SimpleShot = enchant.Class.create(enchant.Sprite, {
         this.owner = owner;
         this.addEventListener('enterframe', function () {
             var l = logiOsciGame.enemies.length;
+            var isHit = false;
             for (var i = 0; i < l; i++) {
                 var index = l - 1 - i;
                 if (logiOsciGame.enemies[index].intersect(this) &&
                     logiOsciGame.enemies[index].isAlive) {
-                    this.remove();
-                    logiOsciGame.enemies[index].killed();
+                    logiOsciGame.enemies[index].damaged();
                     logiOsciGame.game.score += 100;
+                    this.remove();
                 }
             }
         });
@@ -65,7 +66,6 @@ var Laser = enchant.Class.create(enchant.Sprite, {
         this.frame = 1;
         this.moveSpeed = 20;
         this.laserWidth = 0;
-        console.log(this);
         this.state = Laser.STATE.INIT;
         this.addEventListener('enterframe', this.move);
         logiOsciGame.game.rootScene.addChild(this);
@@ -96,7 +96,7 @@ var Laser = enchant.Class.create(enchant.Sprite, {
             if (logiOsciGame.enemies[i].intersect(this) &&
                 logiOsciGame.enemies[i].isAlive) {
                 //this.remove();
-                logiOsciGame.enemies[i].killed();
+                logiOsciGame.enemies[i].damaged();
                 logiOsciGame.game.score += 100;
             }
         }
