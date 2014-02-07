@@ -1,7 +1,7 @@
 var Player = enchant.Class.create(enchant.Sprite, {
     initialize: function (x, y) {
-        enchant.Sprite.call(this, 16, 16);
-        this.image = logiOsciGame.game.assets['images/graphic.png'];
+        enchant.Sprite.call(this, 67, 22);
+        this.image = logiOsciGame.game.assets['images/kazurebo_01.png'];
         this.x = x;
         this.y = y;
 
@@ -63,11 +63,11 @@ var Player = enchant.Class.create(enchant.Sprite, {
         logiOsciGame.game.rootScene.addChild(this);
     },
     setPos: function(touchEvent) {
-        this.dstX = Math.round(touchEvent.x);
+        this.dstX = Math.round(touchEvent.x) - this.width / 2;
         if (enchant.ENV.TOUCH_ENABLED) {
             this.dstY = Math.round(touchEvent.y) + Player.Y_OFFSET;
         } else {
-            this.dstY = Math.round(touchEvent.y);
+            this.dstY = Math.round(touchEvent.y) - this.height / 2;
         }
     },
     _moveToDst: function() {
@@ -90,7 +90,9 @@ var Player = enchant.Class.create(enchant.Sprite, {
             if (this.touchStatus == Player.TouchStatus.TOUCHING) {
                 if (logiOsciGame.game.frame % Player.SHOT_INTERVAL == 0 &&
                     this.shots.length < Player.SHOT_MAX) {
-                    this.addShot(new SimpleShot(this.x, this.y, this));
+                    this.addShot(new SimpleShot(this.x + this.width,
+                                                this.y,
+                                                this));
                 }
             }
             break;

@@ -56,7 +56,7 @@ var Laser = enchant.Class.create(enchant.Sprite, {
                                       logiOsciGame.screenWidth,
                                       1);
         this.image = this.surface;
-        this.moveTo(owner.x, owner.y);
+        this.moveTo(owner.x + owner.width, owner.y);
         this.frame = 1;
         this.moveSpeed = 20;
         this.laserWidth = 0;
@@ -75,7 +75,7 @@ var Laser = enchant.Class.create(enchant.Sprite, {
         case Laser.STATE.OPEN:
             if (this.owner.touchStatus == Player.TouchStatus.TOUCHING &&
                this.age <= Laser.LASER_MAX_WIDTH) {
-                this.x = this.owner.x;
+                this.x = this.owner.x + this.owner.width;
                 this.y = this.owner.y;
             } else {
                 this.state = Laser.STATE.CLOSE;

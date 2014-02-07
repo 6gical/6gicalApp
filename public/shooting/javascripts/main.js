@@ -2,8 +2,8 @@ enchant();
 
 var queryObj = StringUtil.queryObj();
 var logiOsciGame = {
-    screenWidth: queryObj['width'] != null ? queryObj['width'] : 528,
-    screenHeight: queryObj['height'] != null ? queryObj['height'] : 396,
+    screenWidth: queryObj['width'] != null ? queryObj['width'] : 640,
+    screenHeight: queryObj['height'] != null ? queryObj['height'] : 360,
     bgm: 'sounds/esot_bgm.mp3',
     debug: queryObj['debug'] == 'true'
 };
@@ -18,6 +18,7 @@ window.onload = function () {
     game.score = 0;
 
     game.preload('images/graphic.png');
+    game.preload('images/kazurebo_01.png');
     game.onload = function () {
         var stage = FirstStage;
         var spaceBg = new SpaceBg(logiOsciGame.screenWidth, logiOsciGame.screenHeight);
@@ -55,7 +56,7 @@ window.onload = function () {
         var timeLabel = new TimeLabel(logiOsciGame.screenWidth - 180, 8);
         game.rootScene.addChild(timeLabel);
 
-        var lifeLabel = new LifeLabel(280,
+        var lifeLabel = new LifeLabel(8,
                                       logiOsciGame.screenHeight - 20,
                                       Player.LIFE_MAX);
         game.rootScene.addChild(lifeLabel);
