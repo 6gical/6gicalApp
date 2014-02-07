@@ -9,7 +9,6 @@ var logiOsciGame = {
 };
 enchant.ENV.USE_FLASH_SOUND = false;
 
-
 window.onload = function () {
     var fps = 24;
     logiOsciGame.game = new Game(logiOsciGame.screenWidth, logiOsciGame.screenHeight);
@@ -20,6 +19,8 @@ window.onload = function () {
     game.preload('images/graphic.png');
     game.preload('images/kazurebo_01.png');
     game.onload = function () {
+        enchant.ENV.SOUND_ENABLED_ON_MOBILE_SAFARI = true;
+
         var stage = FirstStage;
         var spaceBg = new SpaceBg(logiOsciGame.screenWidth, logiOsciGame.screenHeight);
         game.rootScene.addChild(spaceBg);
