@@ -12,29 +12,24 @@ var SimpleShot = enchant.Class.create(enchant.Sprite, {
         this.frame = 1;
         this.direction = 0;
         this.moveSpeed = 10;
-        this.addEventListener('enterframe', this.move);
+        this.addEventListener('enterframe', function() {
+            this.move();
+            this.removeIfOffScreen();
+        });
         game.rootScene.addChild(this);
         this.owner = owner;
-        this.addEventListener('enterframe', function () {
-            var l = game.enemies.length;
-            var isHit = false;
-            for (var i = 0; i < l; i++) {
-                var index = l - 1 - i;
-                if (game.enemies[index].intersect(this) &&
-                    game.enemies[index].isAlive) {
-                    game.enemies[index].damaged();
-                    game.score += 100;
-                    this.remove();
-                }
-            }
-        });
     },
     move: function() {
-        var game = this.game;
         this.x += this.moveSpeed * Math.cos(this.direction);
         this.y += this.moveSpeed * Math.sin(this.direction);
+    },
+    onHit: function() {
+        this.remove();
+    },
+    removeIfOffScreen: function() {
+        var game = this.game;
         if (this.y > game.height || this.x > game.width ||
-           this.x < -this.width || this.y < -this.height) {
+            this.x < -this.width || this.y < -this.height) {
             this.remove();
         }
     },
@@ -65,7 +60,10 @@ var Laser = enchant.Class.create(enchant.Sprite, {
         this.moveSpeed = 20;
         this.laserWidth = 0;
         this.state = Laser.STATE.INIT;
-        this.addEventListener('enterframe', this.move);
+        this.addEventListener('enterframe', function() {
+            this.move();
+            this.removeIfOffScreen();
+        });
         game.rootScene.addChild(this);
     },
     COLORS: ['white', 'red', 'blue', 'green', 'yellow'],
@@ -91,17 +89,13 @@ var Laser = enchant.Class.create(enchant.Sprite, {
             break;
         }
         this.width = this.laserWidth;
+    },
+    onHit: function() {
+    },
+    removeIfOffScreen: function() {
         var game = this.game;
-        for (var i in game.enemies) {
-            if (game.enemies[i].intersect(this) &&
-                game.enemies[i].isAlive) {
-                //this.remove();
-                game.enemies[i].damaged();
-                game.score += 100;
-            }
-        }
         if (this.y > game.height || this.x > game.width ||
-           this.x < -this.width || this.y < -this.height) {
+            this.x < -this.width || this.y < -this.height) {
             this.remove();
         }
     },

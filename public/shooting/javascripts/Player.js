@@ -36,8 +36,9 @@ var Player = enchant.Class.create(enchant.Sprite, {
         this.addEventListener('enterframe', function () {
             self._moveToDst();
             self.attack();
-            self.checkItems();
-            self.checkEnemies();
+            self.detectItems();
+            self.detectEnemies();
+            self.detectBullets();
             if (self.touchStatus == Player.TouchStatus.TOUCH_START) {
                 self.touchStatus = Player.TouchStatus.TOUCHING;
             } else if (self.touchStatus == Player.TouchStatus.TOUCH_END) {
@@ -45,30 +46,36 @@ var Player = enchant.Class.create(enchant.Sprite, {
             }
         });
     },
-    checkItems: function() {
+    detectItems: function() {
         var items = this.game.items;
         var i, l;
         for (i = 0, l = items.length; i < l; i++) {
             var index = l - 1 - i;
-            if (items[index].intersect(this) &&
-                items[index].isAlive) {
-                items[index].remove();
+            if (items[index] && items[index].isAlive &&
+                items[index].intersect(this)) {
                 this.itemObtained(items[index]);
-                items[index].obtained();
+                items[index].onObtained();
                 this.game.score += 100;
             }
         }
     },
-    checkEnemies: function() {
+    detectEnemies: function() {
         var enemies = this.game.enemies;
         var i, l;
         for (i = 0, l = enemies.length; i < l; i++) {
-            if (enemies[i].intersect(this)) {
+            if (enemies[i] && enemies[i].intersect(this)) {
                 this.damaged();
             }
         }
     },
-    checkBullets: function() {
+    detectBullets: function() {
+        var bullets = this.game.bullets;
+        for (var i = bullets.length - 1; i >= 0; i--) {
+            if (bullets[i] && bullets[i].intersect(this)) {
+                this.damaged();
+                bullets[i].remove();
+            }
+        }
     },
     setPos: function(touchEvent) {
         this.dstX = Math.round(touchEvent.x) - this.width / 2;
@@ -122,15 +129,17 @@ var Player = enchant.Class.create(enchant.Sprite, {
         this.lifePoint--;
         this.dispatchEvent(new Event(Player.EVENT.DAMAGED));
         if (this.lifePoint <= 0) {
-            game.end(game.score,
-                     'SCORE: ' + game.score);
+            game.end(game.score, 'SCORE: ' + game.score);
         }
 
     },
     itemObtained: function(item) {
         switch (item.type) {
             case Item.Type.P:
-            if (this.lifePoint < Player.LIFE_MAX) this.lifePoint++;
+            if (this.lifePoint < Player.LIFE_MAX) {
+                this.lifePoint++;
+                this.dispatchEvent(new Event(Player.EVENT.RECOVERED));
+            }
             break;
             case Item.Type.S:
             this.speedLevel += 0.5;
@@ -156,6 +165,7 @@ var Player = enchant.Class.create(enchant.Sprite, {
     }
 });
 Player.SHOT_MAX = 5;
+Player.LIFE_MAX = 10;
 Player.DEFAULT_MOVE_SPEED = 4;
 Player.SHOT_INTERVAL = 10;
 Player.Y_OFFSET = -50;
@@ -166,5 +176,6 @@ Player.TouchStatus = {
     NOT_TOUCHED: 3
 };
 Player.EVENT = {
-    DAMAGED: 'damaged'
+    DAMAGED: 'damaged',
+    RECOVERED: 'recovered'
 };

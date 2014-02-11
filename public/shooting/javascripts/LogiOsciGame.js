@@ -44,11 +44,8 @@ var LogiOsciGame = enchant.Class.create(enchant.Core, {
                                        this.height - 20,
                                        Player.LIFE_MAX);
         this.player = new Player(this, 0, 152);
-        this.player.addEventListener(
-            Player.EVENT.DAMAGED,
-            function() {
-                this.game.lifeLabel.life = this.lifePoint;
-            });
+        this.player.addEventListener(Player.EVENT.DAMAGED, this.updateLife);
+        this.player.addEventListener(Player.EVENT.RECOVERED, this.updateLife);
         this.lifeLabel.life = this.player.lifePoint;
 
         this.rootScene.addChild(this.spaceBg);
@@ -81,6 +78,9 @@ var LogiOsciGame = enchant.Class.create(enchant.Core, {
             var boss = new Boss(this);
         }
     },
+    updateLife: function() {
+        this.game.lifeLabel.life = this.lifePoint;
+    },
     startBGM: function() {
         var sound = new enchant.DOMSound.load(
             this.bgm,
@@ -95,5 +95,9 @@ var LogiOsciGame = enchant.Class.create(enchant.Core, {
     },
     getAsset: function(name) {
         return this.assets[this.resourcePath + name];
+    },
+    end: function(score, message) {
+        alert('game over:' + message);
+        this.stop();
     }
 });

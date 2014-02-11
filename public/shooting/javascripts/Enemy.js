@@ -7,12 +7,11 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
         this.attackInterval = 25;
         this.addEventListener('enterframe', function () {
             this.move();
-            if (this.y > game.height || this.x > game.width ||
-               this.x < -this.width || this.y < -this.height) {
-                this.remove();
-            } else if(this.age % this.attackInterval == 0) {
+            this.removeIfOffScreen();
+            if(this.age % this.attackInterval == 0) {
                 this.shot();
             }
+            this.detectShots();
         });
         game.enemies.push(this);
         game.rootScene.addChild(this);
@@ -20,6 +19,13 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
     shot: function() {
     },
     move: function () {
+    },
+    removeIfOffScreen: function() {
+        var game = this.game;
+        if (this.y > game.height || this.x > game.width ||
+            this.x < -this.width || this.y < -this.height) {
+            this.remove();
+        }
     },
     remove: function () {
         this.game.rootScene.removeChild(this);
@@ -39,6 +45,16 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
         }
         this.remove();
         this.isAlive = false;
+    },
+    detectShots: function() {
+        var shots = this.game.player.shots;
+        for (var i = shots.length - 1; i >= 0; i--) {
+            if (this.isAlive && shots[i] && this.intersect(shots[i])) {
+                this.damaged();
+                this.game.score += 100;
+                shots[i].onHit();
+            }
+        }
     }
 });
 

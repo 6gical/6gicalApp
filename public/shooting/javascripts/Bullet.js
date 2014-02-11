@@ -8,20 +8,16 @@ var Bullet = enchant.Class.create(enchant.Sprite, {
         this.vx = 1;
         this.vy = 0;
         this.frame = 1;
-        this.addEventListener('enterframe', this.move);
-        this.addEventListener('enterframe', this.detectCollision);
-        this.addEventListener('enterframe', this.removeIfOffScreen);
+        this.addEventListener('enterframe', function() {
+            this.move();
+            this.removeIfOffScreen();
+        });
+        game.bullets.push(this);
         game.rootScene.addChild(this);
     },
     move: function() {
         this.x = Math.round(this.x + this.vx);
         this.y = Math.round(this.y + this.vy);
-    },
-    detectCollision: function() {
-        if (this.game.player.within(this, 8)) {
-            this.game.player.damaged();
-            this.remove();
-        }
     },
     removeIfOffScreen: function() {
         var game = this.game;
@@ -32,6 +28,7 @@ var Bullet = enchant.Class.create(enchant.Sprite, {
     },
     remove: function () {
         this.game.rootScene.removeChild(this);
+        _util.remove(this.game.bullets, this);
         delete this;
     }
 });
@@ -71,6 +68,7 @@ var AimingBullet = enchant.Class.create(Bullet, {
 
 var NWayBullets = enchant.Class.create({
     initialize: function(game, x, y, vx, vy, theta, n) {
+        this.game = game;
         this.bullets = [];
         var radStep = Math.PI / 180 * theta;
         var rad = n % 2 === 0 ? -n / 2 * radStep : (-n / 2 + 0.5) * radStep;
@@ -81,6 +79,7 @@ var NWayBullets = enchant.Class.create({
             bullet.vx = vx * c - vy * s;
             bullet.vy = vx * s + vy * c;
             this.bullets.push(bullet);
+            game.bullets.push(bullet);
         }
     }
 });
