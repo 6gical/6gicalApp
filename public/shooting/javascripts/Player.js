@@ -1,7 +1,8 @@
 var Player = enchant.Class.create(enchant.Sprite, {
-    initialize: function (x, y) {
+    initialize: function (game, x, y) {
         enchant.Sprite.call(this, 67, 22);
-        this.image = logiOsciGame.game.assets['images/kazurebo_01.png'];
+        this.game = game;
+        this.image = game.assets['images/kazurebo_01.png'];
         this.x = x;
         this.y = y;
 
@@ -19,14 +20,15 @@ var Player = enchant.Class.create(enchant.Sprite, {
         this.dstX = x;
         this.dstY = y;
         var self = this;
-        logiOsciGame.game.rootScene.addEventListener('touchstart', function (e) {
+
+        game.rootScene.addEventListener('touchstart', function (e) {
             self.setPos(e);
             self.touchStatus = Player.TouchStatus.TOUCH_START;
         });
-        logiOsciGame.game.rootScene.addEventListener('touchmove', function (e) {
+        game.rootScene.addEventListener('touchmove', function (e) {
             self.setPos(e);
         });
-        logiOsciGame.game.rootScene.addEventListener('touchend', function (e) {
+        game.rootScene.addEventListener('touchend', function (e) {
             self.setPos(e);
             self.touchStatus = Player.TouchStatus.TOUCH_END;
         });
@@ -35,20 +37,20 @@ var Player = enchant.Class.create(enchant.Sprite, {
             self._moveToDst();
             self.attack();
             var i;
-            var l = logiOsciGame.items.length;
+            var l = game.items.length;
             for (i = 0; i < l; i++) {
                 var index = l - 1 - i;
-                if (logiOsciGame.items[index].intersect(this) &&
-                    logiOsciGame.items[index].isAlive) {
-                    logiOsciGame.items[index].remove();
-                    self.itemObtained(logiOsciGame.items[index]);
-                    logiOsciGame.items[index].obtained();
-                    logiOsciGame.game.score += 100;
+                if (game.items[index].intersect(this) &&
+                    game.items[index].isAlive) {
+                    game.items[index].remove();
+                    self.itemObtained(game.items[index]);
+                    game.items[index].obtained();
+                    game.score += 100;
                 }
             }
-            l = logiOsciGame.enemies.length;
+            l = game.enemies.length;
             for (i = 0; i < l; i++) {
-                if (logiOsciGame.enemies[i].intersect(self)) {
+                if (game.enemies[i].intersect(self)) {
                     self.damaged();
                 }
             }
@@ -59,8 +61,6 @@ var Player = enchant.Class.create(enchant.Sprite, {
                 self.touchStatus = Player.TouchStatus.NOT_TOUCHED;
             }
         });
-
-        logiOsciGame.game.rootScene.addChild(this);
     },
     setPos: function(touchEvent) {
         this.dstX = Math.round(touchEvent.x) - this.width / 2;
@@ -85,12 +85,14 @@ var Player = enchant.Class.create(enchant.Sprite, {
         this.y += Math.round(dy / d * s);
     },
     attack: function() {
+        var game = this.game;
         switch (this.weaponType) {
         case WeaponType.SIMPLE:
             if (this.touchStatus == Player.TouchStatus.TOUCHING) {
-                if (logiOsciGame.game.frame % Player.SHOT_INTERVAL == 0 &&
+                if (game.frame % Player.SHOT_INTERVAL == 0 &&
                     this.shots.length < Player.SHOT_MAX) {
-                    this.addShot(new SimpleShot(this.x + this.width,
+                    this.addShot(new SimpleShot(game,
+                                                this.x + this.width,
                                                 this.y,
                                                 this));
                 }
@@ -101,19 +103,19 @@ var Player = enchant.Class.create(enchant.Sprite, {
             if (this.touchStatus == Player.TouchStatus. TOUCHING &&
                 (laser == null ||
                  laser.age > Laser.LASER_INTERVAL + Laser.LASER_MAX_WIDTH)) {
-                this.currentLaser = new Laser(logiOsciGame.player);
+                this.currentLaser = new Laser(game, this);
                 this.addShot(this.currentLaser);
             }
             break;
         }
     },
     damaged: function() {
+        var game = this.game;
         this.lifePoint--;
         this.dispatchEvent(new Event(Player.EVENT.DAMAGED));
         if (this.lifePoint <= 0) {
-            logiOsciGame.game.end(logiOsciGame.game.score,
-                                  'SCORE: ' + logiOsciGame.game.score);
-            //logiOsciGame.game.assets[logiOsciGame.bgm].stop();
+            game.end(game.score,
+                     'SCORE: ' + game.score);
         }
 
     },

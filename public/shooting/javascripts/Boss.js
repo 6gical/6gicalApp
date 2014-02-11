@@ -1,29 +1,30 @@
 var Boss = enchant.Class.create(enchant.Sprite, {
-    initialize: function() {
+    initialize: function(game) {
         var width = 200;
         var height = 200;
         enchant.Sprite.call(this, width, height);
+        this.game = game;
 
         this.surface = new Surface(width, height);
         this.surface.context.fillStyle = 'brown';
         this.surface.context.fillRect(0, 0, width, height);
         this.image = this.surface;
-        logiOsciGame.game.rootScene.addChild(this);
-        var x = logiOsciGame.screenWidth - this.width * 1.1;
-        var y = (logiOsciGame.screenHeight - this.height) / 2;
+        game.rootScene.addChild(this);
+        var x = game.width - this.width * 1.1;
+        var y = (game.height - this.height) / 2;
         this.moveTo(x, y);
 
         var partLife = 50;
 
         var eyeWidth = 20;
         var eyeHeight = 30;
+        var player = game.player;
 
-        this.leftEye = new Enemy(eyeWidth, eyeHeight, partLife);
+        this.leftEye = new Enemy(game, eyeWidth, eyeHeight, partLife);
         this.leftEye.shot = function() {
-            var s = new AimingBullet(this.x,
-                                     this.y,
-                                     logiOsciGame.player.x,
-                                     logiOsciGame.player.y,
+            var s = new AimingBullet(game,
+                                     this.x, this.y,
+                                     player.x, player.y,
                                      Enemy.BULLET_SPEED);
         };
 
@@ -34,11 +35,11 @@ var Boss = enchant.Class.create(enchant.Sprite, {
 
         this.leftEye.moveTo(x + 60, y + 50);
 
-        this.rightEye = new Enemy(eyeWidth, eyeHeight, partLife);
+        this.rightEye = new Enemy(game, eyeWidth, eyeHeight, partLife);
         this.rightEye.shot = function() {
-            var s = new AimingBullet(this.x, this.y,
-                                     logiOsciGame.player.x,
-                                     logiOsciGame.player.y,
+            var s = new AimingBullet(game,
+                                     this.x, this.y,
+                                     player.x, player.y,
                                      Enemy.BULLET_SPEED);
         };
 
@@ -48,14 +49,15 @@ var Boss = enchant.Class.create(enchant.Sprite, {
         this.rightEye.image = this.rightEye.surface;
 
         this.rightEye.moveTo(x + this.width - eyeWidth - 60, y + 50);
-        logiOsciGame.game.rootScene.addChild(this.rightEye);
+        game.rootScene.addChild(this.rightEye);
 
         var noseWidth = 20;
         var noseHeight = 30;
-        this.nose = new Enemy(noseWidth, noseHeight, partLife);
+        this.nose = new Enemy(game, noseWidth, noseHeight, partLife);
         this.nose.attackInterval = 50;
         this.nose.shot = function() {
-            var s = new NWayBullets(this.x, this.y,
+            var s = new NWayBullets(game,
+                                    this.x, this.y,
                                     -5, 0,
                                     30,
                                     5);
@@ -67,12 +69,14 @@ var Boss = enchant.Class.create(enchant.Sprite, {
         this.nose.image = this.nose.surface;
 
         this.nose.moveTo(x + (this.width - noseWidth) / 2, y + 105);
-        logiOsciGame.game.rootScene.addChild(this.nose);
+        game.rootScene.addChild(this.nose);
 
         var mouthWidth = 60;
-        this.mouth = new Enemy(mouthWidth, 10, partLife);
+        this.mouth = new Enemy(game, mouthWidth, 10, partLife);
         this.mouth.shot = function() {
-            var s = new DirectedBullet(this.x, this.y, Math.PI, Enemy.BULLET_SPEED);
+            var s = new DirectedBullet(game,
+                                       this.x, this.y,
+                                       Math.PI, Enemy.BULLET_SPEED);
         };
 
 
@@ -87,11 +91,11 @@ var Boss = enchant.Class.create(enchant.Sprite, {
             if (!this.leftEye.isAlive && !this.rightEye.isAlive &&
                 !this.nose.isAlive && !this.mouth.isAlive) {
                 this.remove();
-                logiOsciGame.game.onclear();
+                game.onclear();
             }
         });
 
-        logiOsciGame.game.rootScene.addChild(this.mouth);
+        game.rootScene.addChild(this.mouth);
 
         var animation = function(node) {
             var h = 120;

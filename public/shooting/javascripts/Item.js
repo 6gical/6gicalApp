@@ -1,8 +1,9 @@
 var Item = enchant.Class.create(enchant.Sprite, {
-    initialize: function(x, y, moveSpeed, type) {
+    initialize: function(game, x, y, moveSpeed, type) {
         enchant.Sprite.call(this, 16, 16);
+        this.game = game;
         this.isAlive = true;
-        this.image = logiOsciGame.game.assets['images/graphic.png'];
+        this.image = game.assets['images/graphic.png'];
         this.x = x;
         this.y = y;
 
@@ -11,8 +12,8 @@ var Item = enchant.Class.create(enchant.Sprite, {
         this.moveSpeed = moveSpeed;
         this.addEventListener('enterframe', function () {
             this.move();
-            if (this.y > logiOsciGame.screenHeight ||
-                this.x > logiOsciGame.screenWidth ||
+            if (this.y > game.screenHeight ||
+                this.x > game.screenWidth ||
                 this.x < -this.width || this.y < -this.height) {
                 this.remove();
             }
@@ -23,7 +24,7 @@ var Item = enchant.Class.create(enchant.Sprite, {
     },
     remove: function() {
         this.isAlive = false;
-        logiOsciGame.game.rootScene.removeChild(this);
+        this.game.rootScene.removeChild(this);
         delete this;
     },
     obtained: function(player) {

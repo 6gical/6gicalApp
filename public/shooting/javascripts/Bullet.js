@@ -1,7 +1,8 @@
 var Bullet = enchant.Class.create(enchant.Sprite, {
-    initialize: function (x, y) {
-        enchant.Sprite.call(this, 16, 16);
-        this.image = logiOsciGame.game.assets['images/graphic.png'];
+    initialize: function (game, x, y) {
+        enchant.Sprite.call(this,16, 16);
+        this.game = game;
+        this.image = game.assets['images/graphic.png'];
         this.x = x;
         this.y = y;
         this.vx = 1;
@@ -10,34 +11,35 @@ var Bullet = enchant.Class.create(enchant.Sprite, {
         this.addEventListener('enterframe', this.move);
         this.addEventListener('enterframe', this.detectCollision);
         this.addEventListener('enterframe', this.removeIfOffScreen);
-        logiOsciGame.game.rootScene.addChild(this);
+        game.rootScene.addChild(this);
     },
     move: function() {
         this.x = Math.round(this.x + this.vx);
         this.y = Math.round(this.y + this.vy);
     },
     detectCollision: function() {
-        if (logiOsciGame.player.within(this, 8)) {
-            logiOsciGame.player.damaged();
+        if (this.game.player.within(this, 8)) {
+            this.game.player.damaged();
             this.remove();
         }
     },
     removeIfOffScreen: function() {
-        if (this.y > logiOsciGame.screenHeight || this.x > logiOsciGame.screenWidth ||
+        var game = this.game;
+        if (this.y >game.height || this.x > game.width ||
            this.x < -this.width || this.y < -this.height) {
             this.remove();
         }
     },
     remove: function () {
-        logiOsciGame.game.rootScene.removeChild(this);
+        this.game.rootScene.removeChild(this);
         delete this;
     }
 });
 
 var DirectedBullet = enchant.Class.create(Bullet, {
-    initialize: function (x, y, direction, speed) {
-        Bullet.call(this, x, y);
-        this.image = logiOsciGame.game.assets['images/graphic.png'];
+    initialize: function (game, x, y, direction, speed) {
+        Bullet.call(this, game, x, y);
+        this.image = this.game.assets['images/graphic.png'];
         this.frame = 1;
         this.vx = Math.cos(direction) * speed;
         this.vy = Math.sin(direction) * speed;
@@ -52,9 +54,9 @@ var DirectedBullet = enchant.Class.create(Bullet, {
 
 
 var AimingBullet = enchant.Class.create(Bullet, {
-    initialize: function (x, y, tx, ty, speed) {
-        Bullet.call(this, x, y);
-        this.image = logiOsciGame.game.assets['images/graphic.png'];
+    initialize: function (game, x, y, tx, ty, speed) {
+        Bullet.call(this, game, x, y);
+        this.image = this.game.assets['images/graphic.png'];
         this.frame = 1;
         var d = Math.sqrt((tx - x) * (tx - x) + (ty - y) * (ty - y));
         this.vx = (tx - x) / d * speed;
@@ -68,14 +70,14 @@ var AimingBullet = enchant.Class.create(Bullet, {
 });
 
 var NWayBullets = enchant.Class.create({
-    initialize: function(x, y, vx, vy, theta, n) {
+    initialize: function(game, x, y, vx, vy, theta, n) {
         this.bullets = [];
         var radStep = Math.PI / 180 * theta;
         var rad = n % 2 === 0 ? -n / 2 * radStep : (-n / 2 + 0.5) * radStep;
         for (var i = 0; i < n; i++, rad += radStep) {
             var c = Math.cos(rad);
             var s = Math.sin(rad);
-            var bullet = new Bullet(x, y);
+            var bullet = new Bullet(game, x, y);
             bullet.vx = vx * c - vy * s;
             bullet.vy = vx * s + vy * c;
             this.bullets.push(bullet);

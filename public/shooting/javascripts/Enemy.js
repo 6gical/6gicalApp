@@ -1,29 +1,30 @@
 var Enemy = enchant.Class.create(enchant.Sprite, {
-    initialize: function (width, height, life) {
+    initialize: function (game, width, height, life) {
         enchant.Sprite.call(this, width, height);
+        this.game = game;
         this.isAlive = true;
         this.life = life;
         this.attackInterval = 25;
         this.addEventListener('enterframe', function () {
             this.move();
-            if (this.y > logiOsciGame.screenHeight || this.x > logiOsciGame.screenWidth ||
+            if (this.y > game.height || this.x > game.width ||
                this.x < -this.width || this.y < -this.height) {
                 this.remove();
             } else if(this.age % this.attackInterval == 0) {
                 this.shot();
             }
         });
-        logiOsciGame.enemies.push(this);
-        logiOsciGame.game.rootScene.addChild(this);
+        game.enemies.push(this);
+        game.rootScene.addChild(this);
     },
     shot: function() {
     },
     move: function () {
     },
     remove: function () {
-        var list =  logiOsciGame.enemies;
+        var list =  this.game.enemies;
         var l = list.length;
-        logiOsciGame.game.rootScene.removeChild(this);
+        this.game.rootScene.removeChild(this);
         for (var i = 0; i < l; i++) {
             if (list[l - 1 -i] === this) {
                 list.splice(l - 1 - i, 1);
@@ -34,10 +35,13 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
         this.life--;
         if (this.life > 0) return;
         if (this.itemType != null) {
-            var item = new Item(this.x, this.y, this.moveSpeed / 2, this.itemType);
+            var item = new Item(this.game,
+                                this.x, this.y,
+                                this.moveSpeed / 2,
+                                this.itemType);
             item.key = item.frame;
-            logiOsciGame.items.push(item);
-            logiOsciGame.game.rootScene.addChild(item);
+            this.game.items.push(item);
+            this.game.rootScene.addChild(item);
         }
         this.remove();
         this.isAlive = false;
@@ -45,9 +49,9 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
 });
 
 var NormalEnemy = enchant.Class.create(Enemy, {
-    initialize: function (x, y, omega, itemType) {
-        Enemy.call(this, 16, 16, 1);
-        this.image = logiOsciGame.game.assets['images/graphic.png'];
+    initialize: function (game, x, y, omega, itemType) {
+        Enemy.call(this, game, 16, 16, 1);
+        this.image = this.game.assets['images/graphic.png'];
         this.x = x;
         this.y = y;
 
@@ -58,11 +62,10 @@ var NormalEnemy = enchant.Class.create(Enemy, {
         this.moveSpeed = 3;
     },
     shot: function() {
-        //                var s = new DirectedBullet(this.x, this.y, Math.PI, Enemy.BULLET_SPEED);
-        var s = new AimingBullet(this.x,
-                                 this.y,
-                                 logiOsciGame.player.x,
-                                 logiOsciGame.player.y,
+        //                var s = new DirectedBullet(this.game, this.x, this.y, Math.PI, Enemy.BULLET_SPEED);
+        var s = new AimingBullet(this.game,
+                                 this.x, this.y,
+                                 this.game.player.x, this.game.player.y,
                                  Enemy.BULLET_SPEED);
     },
     move: function () {
@@ -95,7 +98,8 @@ var ZigzagEnemy = enchant.Class.create(NormalEnemy, {
 
 var NWayEnemy = enchant.Class.create(NormalEnemy, {
     shot: function() {
-        var s = new NWayBullets(this.x, this.y,
+        var s = new NWayBullets(this.game,
+                                this.x, this.y,
                                 -5, 0,
                                 30,
                                 5);

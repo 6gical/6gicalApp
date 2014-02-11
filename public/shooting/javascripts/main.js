@@ -1,90 +1,18 @@
 enchant();
 
-var queryObj = StringUtil.queryObj();
-var logiOsciGame = {
-    screenWidth: queryObj['width'] != null ? queryObj['width'] : 640,
-    screenHeight: queryObj['height'] != null ? queryObj['height'] : 360,
-    bgm: 'sounds/esot_bgm.mp3',
-    debug: queryObj['debug'] == 'true'
-};
-enchant.ENV.USE_FLASH_SOUND = false;
-
 window.onload = function () {
-    var fps = 24;
-    logiOsciGame.game = new Game(logiOsciGame.screenWidth, logiOsciGame.screenHeight);
-    var game = logiOsciGame.game;
-    game.fps = fps;
-    game.score = 0;
+    enchant.ENV.USE_FLASH_SOUND = false;
 
-    game.preload('images/graphic.png');
-    game.preload('images/kazurebo_01.png');
-    game.onload = function () {
-        enchant.ENV.SOUND_ENABLED_ON_MOBILE_SAFARI = true;
+    var queryObj = StringUtil.queryObj();
+    var screenWidth = queryObj['width'] != null ? queryObj['width'] : 640;
+    var screenHeight = queryObj['height'] != null ? queryObj['height'] : 360;
+    var isDebug = queryObj['debug'] == 'true';
 
-        var stage = FirstStage;
-        var spaceBg = new SpaceBg(logiOsciGame.screenWidth, logiOsciGame.screenHeight);
-        game.rootScene.addChild(spaceBg);
-
-        logiOsciGame.player = new Player(0, 152);
-        var player = logiOsciGame.player;
-        logiOsciGame.items = new Array();
-        logiOsciGame.enemies = new Array();
-
-        var enemies = logiOsciGame.enemies;
-        game.rootScene.backgroundColor = 'black';
-        game.rootScene.addEventListener('enterframe', function () {
-            var time = game.frame / game.fps;
-            var e = stage.enemies;
-            for (var i = 0; i < e.length; i++) {
-                if (time == e[i].time) {
-                    var omega = e[i].y < logiOsciGame.screenHeight / 2 ? 0.01 : -0.01;
-                    var enemy = new EnemyType[e[i].type](e[i].x != null ? e[i].x : logiOsciGame.screenWidth,
-                                                         e[i].y,
-                                                         omega,
-                                                         Item.Type[e[i].item]);
-                }
-            }
-
-            if (stage.boss.time == time) {
-                var boss = new Boss();
-            }
-
-            scoreLabel.score = game.score;
-            spaceBg.scroll(game.frame);
-        });
-        var scoreLabel = new ScoreLabel(8, 8);
-        game.rootScene.addChild(scoreLabel);
-        var timeLabel = new TimeLabel(logiOsciGame.screenWidth - 180, 8);
-        game.rootScene.addChild(timeLabel);
-
-        var lifeLabel = new LifeLabel(8,
-                                      logiOsciGame.screenHeight - 20,
-                                      Player.LIFE_MAX);
-        game.rootScene.addChild(lifeLabel);
-        lifeLabel.life = player.lifePoint;
-        player.addEventListener(Player.EVENT.DAMAGED,
-                                function() {
-                                    lifeLabel.life = player.lifePoint;
-                                });
-    };
-    game.onerror = function(e) {
-        console.log('sorry. something wrong:' + e.message);
-    };
-    if (logiOsciGame.debug) {
+    var game = new LogiOsciGame(screenWidth,
+                                screenHeight);
+    if (isDebug) {
         game.debug();
     } else {
         game.start();
     }
-    game.onstart = function() {
-        var sound = new enchant.DOMSound.load(logiOsciGame.bgm, 'audio/mpeg', function() {
-            sound.play();
-            sound._element.loop = true;
-        });
-    };
-    game.onclear = function() {
-        game.stop();
-        setTimeout(function() {
-            alert('Congratulations! Thank you for playing.');
-        }, 10);
-    };
 };
