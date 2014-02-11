@@ -1,25 +1,32 @@
-var LogiOsciGame = enchant.Class.create(Game, {
-    initialize: function(width, height) {
-        Game.call(this, width, height);
-        this.bgm = 'sounds/esot_bgm.mp3';
+var LogiOsciGame = enchant.Class.create(enchant.Core, {
+    initialize: function(width, height, resourcePath) {
+        enchant.Core.call(this, width, height);
         this.fps = 24;
         this.score = 0;
-        this.preload('images/graphic.png');
-        this.preload('images/kazurebo_01.png');
-        this.preload('sounds/esot_bgm.mp3');
+        this.resourcePath = resourcePath != null ? resourcePath : './';
+        this.bgm = this.resourcePath + 'sounds/esot_bgm.mp3';
+        this._preload('images/graphic.png');
+        this._preload('images/kazurebo_01.png');
+
+        this.items = [];
+        this.enemies = [];
+        this.bullets = [];
+        this.weaponShots = [];
+
+        this.soundEnabled = _util.queryObj()['sound'] != 'off';
 
         this.onload = function () {
             enchant.ENV.SOUND_ENABLED_ON_MOBILE_SAFARI = true;
-            this.items = new Array();
-            this.enemies = new Array();
-
             this.createFirstStage();
+            this.onstart();
         };
         this.onerror = function(e) {
             console.log('sorry. something wrong:' + e.message);
         };
         this.onstart = function() {
-            this.startBGM();
+            if (this.soundEnabled) {
+                this.startBGM();
+            }
         };
         this.onclear = function() {
             this.stop();
@@ -31,9 +38,9 @@ var LogiOsciGame = enchant.Class.create(Game, {
     createFirstStage: function() {
         this.stage = FirstStage;
         this.spaceBg = new SpaceBg(this.width, this.height);
-        this.scoreLabel = new ScoreLabel(8, 8);
-        this.timeLabel = new TimeLabel(this.width - 180, 8);
-        this.lifeLabel = new LifeLabel(8,
+        this.scoreLabel = new enchant.ui.ScoreLabel(8, 8);
+        this.timeLabel = new enchant.ui.TimeLabel(this.width - 180, 8);
+        this.lifeLabel = new enchant.ui.LifeLabel(8,
                                        this.height - 20,
                                        Player.LIFE_MAX);
         this.player = new Player(this, 0, 152);
@@ -82,5 +89,11 @@ var LogiOsciGame = enchant.Class.create(Game, {
                 sound.play();
                 sound._element.loop = true;
             });
+    },
+    _preload: function(name) {
+        this.preload(this.resourcePath + name);
+    },
+    getAsset: function(name) {
+        return this.assets[this.resourcePath + name];
     }
 });

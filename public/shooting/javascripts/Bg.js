@@ -2,7 +2,7 @@ var SpaceBg = enchant.Class.create(enchant.Sprite, {
     initialize: function(width, height) {
         enchant.Sprite.call(this, width, height);
         this.stars = [];
-        this.bgSurface = new Surface(width, height);
+        this.bgSurface = new enchant.Surface(width, height);
         this.image = this.bgSurface;
         this.width = width;
         this.height = height;

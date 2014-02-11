@@ -2,7 +2,7 @@ var Player = enchant.Class.create(enchant.Sprite, {
     initialize: function (game, x, y) {
         enchant.Sprite.call(this, 67, 22);
         this.game = game;
-        this.image = game.assets['images/kazurebo_01.png'];
+        this.image = game.getAsset('images/kazurebo_01.png');
         this.x = x;
         this.y = y;
 
@@ -36,31 +36,39 @@ var Player = enchant.Class.create(enchant.Sprite, {
         this.addEventListener('enterframe', function () {
             self._moveToDst();
             self.attack();
-            var i;
-            var l = game.items.length;
-            for (i = 0; i < l; i++) {
-                var index = l - 1 - i;
-                if (game.items[index].intersect(this) &&
-                    game.items[index].isAlive) {
-                    game.items[index].remove();
-                    self.itemObtained(game.items[index]);
-                    game.items[index].obtained();
-                    game.score += 100;
-                }
-            }
-            l = game.enemies.length;
-            for (i = 0; i < l; i++) {
-                if (game.enemies[i].intersect(self)) {
-                    self.damaged();
-                }
-            }
-
+            self.checkItems();
+            self.checkEnemies();
             if (self.touchStatus == Player.TouchStatus.TOUCH_START) {
                 self.touchStatus = Player.TouchStatus.TOUCHING;
             } else if (self.touchStatus == Player.TouchStatus.TOUCH_END) {
                 self.touchStatus = Player.TouchStatus.NOT_TOUCHED;
             }
         });
+    },
+    checkItems: function() {
+        var items = this.game.items;
+        var i, l;
+        for (i = 0, l = items.length; i < l; i++) {
+            var index = l - 1 - i;
+            if (items[index].intersect(this) &&
+                items[index].isAlive) {
+                items[index].remove();
+                this.itemObtained(items[index]);
+                items[index].obtained();
+                this.game.score += 100;
+            }
+        }
+    },
+    checkEnemies: function() {
+        var enemies = this.game.enemies;
+        var i, l;
+        for (i = 0, l = enemies.length; i < l; i++) {
+            if (enemies[i].intersect(this)) {
+                this.damaged();
+            }
+        }
+    },
+    checkBullets: function() {
     },
     setPos: function(touchEvent) {
         this.dstX = Math.round(touchEvent.x) - this.width / 2;
@@ -144,11 +152,7 @@ var Player = enchant.Class.create(enchant.Sprite, {
         if (shot == this.currentLaser) {
             this.currentLaser = null;
         }
-        this.shots.some(function(v, i, shots){
-            if (v == shot) {
-                shots.splice(i, 1);
-            }
-        });
+        _util.remove(this.shots, shot);
     }
 });
 Player.SHOT_MAX = 5;

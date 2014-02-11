@@ -2,7 +2,7 @@ var Bullet = enchant.Class.create(enchant.Sprite, {
     initialize: function (game, x, y) {
         enchant.Sprite.call(this,16, 16);
         this.game = game;
-        this.image = game.assets['images/graphic.png'];
+        this.image = game.getAsset('images/graphic.png');
         this.x = x;
         this.y = y;
         this.vx = 1;
@@ -39,7 +39,7 @@ var Bullet = enchant.Class.create(enchant.Sprite, {
 var DirectedBullet = enchant.Class.create(Bullet, {
     initialize: function (game, x, y, direction, speed) {
         Bullet.call(this, game, x, y);
-        this.image = this.game.assets['images/graphic.png'];
+        this.image = game.getAsset('images/graphic.png');
         this.frame = 1;
         this.vx = Math.cos(direction) * speed;
         this.vy = Math.sin(direction) * speed;
@@ -56,7 +56,7 @@ var DirectedBullet = enchant.Class.create(Bullet, {
 var AimingBullet = enchant.Class.create(Bullet, {
     initialize: function (game, x, y, tx, ty, speed) {
         Bullet.call(this, game, x, y);
-        this.image = this.game.assets['images/graphic.png'];
+        this.image = game.getAsset('images/graphic.png');
         this.frame = 1;
         var d = Math.sqrt((tx - x) * (tx - x) + (ty - y) * (ty - y));
         this.vx = (tx - x) / d * speed;

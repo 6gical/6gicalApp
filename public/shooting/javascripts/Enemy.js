@@ -22,14 +22,8 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
     move: function () {
     },
     remove: function () {
-        var list =  this.game.enemies;
-        var l = list.length;
         this.game.rootScene.removeChild(this);
-        for (var i = 0; i < l; i++) {
-            if (list[l - 1 -i] === this) {
-                list.splice(l - 1 - i, 1);
-            }
-        }
+        _util.remove(this.game.enemies, this);
     },
     damaged: function() {
         this.life--;
@@ -51,7 +45,7 @@ var Enemy = enchant.Class.create(enchant.Sprite, {
 var NormalEnemy = enchant.Class.create(Enemy, {
     initialize: function (game, x, y, omega, itemType) {
         Enemy.call(this, game, 16, 16, 1);
-        this.image = this.game.assets['images/graphic.png'];
+        this.image = this.game.getAsset('images/graphic.png');
         this.x = x;
         this.y = y;
 

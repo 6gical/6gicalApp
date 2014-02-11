@@ -3,7 +3,7 @@ var Item = enchant.Class.create(enchant.Sprite, {
         enchant.Sprite.call(this, 16, 16);
         this.game = game;
         this.isAlive = true;
-        this.image = game.assets['images/graphic.png'];
+        this.image = game.getAsset('images/graphic.png');
         this.x = x;
         this.y = y;
 

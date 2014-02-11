@@ -8,14 +8,40 @@
   </head>
   <body>
     <div id="mocha"></div>
+    <div id="enchant-container" style="display: none;">
+      <div id="enchant-centering">
+        <div id="enchant-stage"></div>
+      </div>
+    </div>
     <script src="mocha.js"></script>
     <script src="chai.js"></script>
     <script>
       mocha.setup('bdd')
       var assert = chai.assert;
     </script>
-    <script src="test.js"></script>
+
+    <!-- library -->
+    <script type="text/javascript" src="../libs/enchant/enchant.js"></script>
+    <script type="text/javascript" src="../libs/enchant/plugins/nineleap.enchant.js"></script>
+    <script type="text/javascript" src="../libs/enchant/plugins/ui.enchant.js"></script>
+
+    <!-- application sources -->
+    <script type="text/javascript" src="../shooting/javascripts/util.js"></script>
+    <script type="text/javascript" src="../shooting/javascripts/LogiOsciGame.js"></script>
+    <script type="text/javascript" src="../shooting/javascripts/Bg.js"></script>
+    <script type="text/javascript" src="../shooting/javascripts/Weapon.js"></script>
+    <script type="text/javascript" src="../shooting/javascripts/Bullet.js"></script>
+    <script type="text/javascript" src="../shooting/javascripts/Player.js"></script>
+    <script type="text/javascript" src="../shooting/javascripts/Enemy.js"></script>
+    <script type="text/javascript" src="../shooting/javascripts/Item.js"></script>
+    <script type="text/javascript" src="../shooting/javascripts/Boss.js"></script>
+    <script type="text/javascript" src="../shooting/javascripts/FirstStage.js"></script>
+
+    <!-- test sources -->
+    <script src="utilTest.js"></script>
+    <script src="LogiOsciGameTest.js"></script>
     <script>
+      var expect = chai.expect;
       if (window.mochaPhantomJS) {
           mocha.checkLeaks();
           mochaPhantomJS.run();

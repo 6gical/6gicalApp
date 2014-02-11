@@ -6,7 +6,7 @@ var SimpleShot = enchant.Class.create(enchant.Sprite, {
     initialize: function (game, x, y, owner) {
         enchant.Sprite.call(this, 16, 16);
         this.game = game;
-        this.image = game.assets['images/graphic.png'];
+        this.image = game.getAsset('images/graphic.png');
         this.x = x;
         this.y = y;
         this.frame = 1;
@@ -108,11 +108,7 @@ var Laser = enchant.Class.create(enchant.Sprite, {
     remove: function() {
         var self = this;
         this.owner.removeShot(this);
-        this.owner.shots.some(function(v, i){
-            if (v == self) {
-                self.owner.shots.splice(i, 1);
-            }
-        });
+        _util.remove(this.owner.shots, self);
         this.game.rootScene.removeChild(this);
         delete this;
     }

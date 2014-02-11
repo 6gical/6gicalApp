@@ -5,7 +5,7 @@ var Boss = enchant.Class.create(enchant.Sprite, {
         enchant.Sprite.call(this, width, height);
         this.game = game;
 
-        this.surface = new Surface(width, height);
+        this.surface = new enchant.Surface(width, height);
         this.surface.context.fillStyle = 'brown';
         this.surface.context.fillRect(0, 0, width, height);
         this.image = this.surface;
@@ -28,7 +28,7 @@ var Boss = enchant.Class.create(enchant.Sprite, {
                                      Enemy.BULLET_SPEED);
         };
 
-        this.leftEye.surface = new Surface(eyeWidth, eyeHeight);
+        this.leftEye.surface = new enchant.Surface(eyeWidth, eyeHeight);
         this.leftEye.surface.context.fillStyle = 'blue';
         this.leftEye.surface.context.fillRect(0, 0, eyeWidth, eyeHeight);
         this.leftEye.image = this.leftEye.surface;
@@ -43,7 +43,7 @@ var Boss = enchant.Class.create(enchant.Sprite, {
                                      Enemy.BULLET_SPEED);
         };
 
-        this.rightEye.surface = new Surface(eyeWidth, eyeHeight);
+        this.rightEye.surface = new enchant.Surface(eyeWidth, eyeHeight);
         this.rightEye.surface.context.fillStyle = 'green';
         this.rightEye.surface.context.fillRect(0, 0, eyeWidth, eyeHeight);
         this.rightEye.image = this.rightEye.surface;
@@ -63,7 +63,7 @@ var Boss = enchant.Class.create(enchant.Sprite, {
                                     5);
         };
 
-        this.nose.surface = new Surface(noseWidth, noseHeight);
+        this.nose.surface = new enchant.Surface(noseWidth, noseHeight);
         this.nose.surface.context.fillStyle = 'gold';
         this.nose.surface.context.fillRect(0, 0, noseWidth, noseHeight);
         this.nose.image = this.nose.surface;
@@ -80,7 +80,7 @@ var Boss = enchant.Class.create(enchant.Sprite, {
         };
 
 
-        this.mouth.surface = new Surface(width, height);
+        this.mouth.surface = new enchant.Surface(width, height);
         this.mouth.surface.context.fillStyle = 'purple';
         this.mouth.surface.context.fillRect(0, 0, mouthWidth, 10);
         this.mouth.image = this.mouth.surface;
