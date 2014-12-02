@@ -4,7 +4,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="description" content="都内で活動する、女性ボーカルパンクバンド　「ロジカルオシレーター」　です。">
 <meta name="keywords" content="Cymbals,シンバルズ,渋谷系">
+<link rel="stylesheet" href="octicons/octicons.css" type="text/css" />
 <script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <title>ロジカルオシレーターOfficial Homepage</title>
 <STYLE TYPE="text/css">
 <!--
@@ -30,6 +32,28 @@ a:hover   {text-decoration:underline;color:#000000;}
 .text1     {font-size:24px;color:#C0C0C0;line-height:140%;font-family:Verdana;font-weight:bold ;} 
 
 .waku1      { border-color:#C0C0C0; border-width:1px; border-style:solid;} 
+#songs {
+  margin-top: 50px;
+}
+.download {
+    font-size: 20px;
+    margin-top: 30px;
+}
+.song {
+  height: 60px;
+  width: 800px;
+  vertical-align: middle;
+  text-align: left;
+}
+.song-title {
+  margin: 10px;
+  font-size: 18px;
+}
+.song-audition {
+}
+.gumroad-button {
+  float: right;
+}
 -->
 </STYLE>
 </head>
@@ -41,17 +65,37 @@ a:hover   {text-decoration:underline;color:#000000;}
           <tr valign="top">
             <!-- 左サイドここから -->
             <td class="color2"><img src="images/spacer.gif" alt="" width="20" height="15">
-            <SCRIPT language="JavaScript">
-<!--
-// 
-img = new Array();
-img[0] = "images/ram1.jpg";
-img[1] = "images/ram2.jpg";
-img[2] = "images/ram3.jpg";
+            <SCRIPT language="javascript">
+              img = new Array();
+              img[0] = "images/ram1.jpg";
+              img[1] = "images/ram2.jpg";
+              img[2] = "images/ram3.jpg";
+              n = Math.floor(Math.random()*img.length);
+              document.write("<img src='"+img[n]+" '  border='0'>");
+              $(function() {
+                var songs = ["オニオンリング・オーケストラ",
+                             "E.S.O.T",
+                             "ロックンロールミュージック",
+                             "ファミリーコンピューター",
+                             "チーズケーキ・ワルツ",
+                             "Mr.Moony",
+                             "クロマトグラフ",
+                             "君はサラブレッド",
+                             "ハローワーク ～職業安定所の歌～",
+                             "エレベーターガール",
+                             "京王電鉄999"];
 
-n = Math.floor(Math.random()*img.length);
-document.write("<img src='"+img[n]+" '  border='0'>");
-//-->
+              $.each(songs, function(i, val) {
+                 $("#songs").append('<div class="song">' +
+                '<audio src="999.mp3" controls></audio>' +
+                     '<span class="song-title">' + val + '</span>' +
+                   '<a href="https://gum.co/Vpkea" class="gumroad-button">¥100</a> </div>');
+                 });
+              });
+
+              $('#try-button').click(function() {
+                  
+              });
 </SCRIPT>
           <div align="center" class="text1"><strong><a href="index.html" style="text-decoration:none">Logical OSCillator</a></strong></div></td>
             <!-- 左サイドここまで -->
@@ -78,9 +122,6 @@ document.write("<img src='"+img[n]+" '  border='0'>");
               <div style="margin:10px">
               ロジカルオシレーター　1st full album 「Logical OSCillator」<br>2014年11月30日 Release!!<br>
               <iframe width="448" height="273" src="https://www.youtube.com/embed/tD4c1PuNgc0" frameborder="0" allowfullscreen></iframe>
-              <div>
-                京王電鉄999 <a href="https://gum.co/Vpkea" class="gumroad-button">購入</a>
-              </div>
               <!-- 本文ここまで -->
             </td>
           </tr>
@@ -88,6 +129,10 @@ document.write("<img src='"+img[n]+" '  border='0'>");
       <!-- 右サイドここまで -->
     </tr>
   </table>
+ <h2 class="download">データダウンロード </h2>
+ <div id="songs">
+
+ </div>
   <!-- 著作権表示ここから -->
   <table width="740"  border="0" cellspacing="0" cellpadding="3">
     <tr>
